@@ -12,46 +12,63 @@
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
         <Canvas>
-            <Grid x:Name="Palette" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" MouseMove="Palette_MouseMove" MouseUp="Palette_MouseUp" MouseLeave="Palette_MouseLeave" Canvas.Top="15" Canvas.Left="15">
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" >
-                    <Border x:Name="PaletteGrip" Background="#99595959" Width="80" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Left" Margin="0,0,30,0" ></Border>
-                    <Border x:Name="CloseButton" Background="#CCFF7774" Width="20" Height="20" CornerRadius="5" Cursor="No" HorizontalAlignment="Right" MouseDown="CloseButton_MouseDown" ></Border>
-                </Grid>
-                <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50,75,50,50">
-                    <WrapPanel.Effect>
+            <Grid x:Name="Palette" HorizontalAlignment="Left" VerticalAlignment="Top" Width="310" MouseMove="Palette_MouseMove" MouseUp="Palette_MouseUp" MouseLeave="Palette_MouseLeave" Canvas.Top="15" Canvas.Left="15">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50">
+                    <StackPanel.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
-                    </WrapPanel.Effect>
-                    <Border Width="40" Height="40" Background="#FFAEE238" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FF38E2A8" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border x:Name="DefaultColor" Width="40" Height="40" Background="#FF359EC9" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"/>
-                    <Border Width="40" Height="40" Background="#FFE2C638" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FFE28C38" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FFE25738" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FF7855D4" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FFD570C2" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FFE03030" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FF1E1E1E" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FF7E7E7E" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
-                    <Border Width="40" Height="40" Background="#FFD6D6D6" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="Black"></Border>
-                    <Grid Width="150">
+                    </StackPanel.Effect>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Border x:Name="PaletteGrip" Background="#BF595959" Width="140" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Left" Margin="0,0,30,0" >
+                            <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2"/>
+                        </Border>
+                        <Border x:Name="CloseButton" Background="#FFFF7774" Width="20" Height="20" CornerRadius="5" Cursor="Hand" HorizontalAlignment="Right" MouseDown="CloseButton_MouseDown" >
+                            <TextBlock Text="X" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2"/>
+                        </Border>
+                    </Grid>
+                    <WrapPanel Margin="0,10,0,0" >
+                        <Border Width="40" Height="40" Background="#FF86E238" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FF38E2A8" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border x:Name="DefaultColor" Width="40" Height="40" Background="#FF359EC9" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"/>
+                        <Border Width="40" Height="40" Background="#FF7E7E7E" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FFE2CF38" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="#FF2B2B2B"></Border>
+                        <Border Width="40" Height="40" Background="#FF7855D4" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FFD570C2" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FFD6D6D6" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="#FF2A2A2A"></Border>
+                        <Border Width="40" Height="40" Background="#FFE27F38" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FFDF2828" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FFE2386D" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                        <Border Width="40" Height="40" Background="#FF1E1E1E" CornerRadius="15" Margin="5" MouseDown="ColorSelector_MouseDown" Cursor="Pen" BorderBrush="White"></Border>
+                    </WrapPanel>
+                    <Grid Margin="0,15">
                         <Border Background="#4C727272" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,0,5,0" CornerRadius="3">
                             <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="15"  HorizontalAlignment="Center" VerticalAlignment="Center"></Border>
                         </Border>
-                        <Slider Margin="5,15,30,15" Minimum="1" SmallChange="0.2" Value="5" ValueChanged="Slider_ValueChanged" LargeChange="0.5" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" Focusable="False" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" />
+                        <Slider Margin="5,0,30,0" Minimum="1" SmallChange="0.2" Value="5" ValueChanged="Slider_ValueChanged" LargeChange="0.5" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" Focusable="False" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" />
                     </Grid>
-                    <Border Width="30" Height="30" CornerRadius="10" Margin="4"  BorderThickness="1" BorderBrush="White" Background="#4C000000">
-                        <TextBlock Text="&lt;" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18.667" FontFamily="Consolas" Margin="0,0,0,2"/>
-                    </Border>
-                    <Border Width="30" Height="30" CornerRadius="10" Margin="4" BorderThickness="1" BorderBrush="White" Background="#4C000000">
-                        <TextBlock Text="&gt;" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18.667" FontFamily="Consolas" Margin="0,0,0,2"/>
-                    </Border>
-                    <Border Width="30" Height="30" CornerRadius="10" Margin="4"  BorderThickness="1" BorderBrush="White" Background="#4C000000">
-                        <TextBlock Text="C" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18.667" FontFamily="Consolas" Margin="0,0,0,2"/>
-                    </Border>
-                    <Border Width="30" Height="30" CornerRadius="10" Margin="4"  BorderThickness="1" BorderBrush="White" Background="#4C000000">
-                        <TextBlock Text="S" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18.667" FontFamily="Consolas" Margin="0,0,0,2"/>
-                    </Border>
-                </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <Border x:Name="UndoButton" Width="50" Height="30" CornerRadius="10" Margin="4" Background="#4C000000" ToolTip="Undo" Cursor="Hand" MouseDown="UndoButton_MouseDown">
+                            <TextBlock Text="Undo" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2"/>
+                        </Border>
+                        <Border x:Name="EraserButton" Width="60" Height="30" CornerRadius="10" Margin="4" Background="#4C000000" ToolTip="Eraser" MouseDown="EraserButton_MouseDown" Cursor="Hand">
+                            <TextBlock Text="Eraser" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2"/>
+                        </Border>
+                        <Border x:Name="ClearButton" Width="60" Height="30" CornerRadius="10" Margin="4"  BorderThickness="1" Background="#4C000000"  MouseDown="ClearButton_MouseDown" ToolTip="Clear screen" Cursor="Hand">
+                            <TextBlock Text="Clear" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2"/>
+                        </Border>
+                        <Border x:Name="SaveButton" Width="50" Height="30" CornerRadius="10" Margin="4"  Background="#4C000000" Cursor="Hand" MouseDown="SaveButton_MouseDown">
+                            <TextBlock Text="Save" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2" ToolTip="Save"/>
+                        </Border>
+                        <Border x:Name="LoadButton" Width="50" Height="30" CornerRadius="10" Margin="4"  Background="#4C000000" Cursor="Hand" MouseDown="LoadButton_MouseDown">
+                            <TextBlock Text="Load" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2" ToolTip="Load"/>
+                        </Border>
+                        <Border x:Name="ExportButton" Width="70" Height="30" CornerRadius="10" Margin="4" Background="#4C000000" Cursor="Hand">
+                            <TextBlock Text="Export" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2" ToolTip="Export as Image"/>
+                        </Border> 
+                        <Border x:Name="MinimizeButton" Width="80" Height="30" CornerRadius="10" Margin="4" Background="#4C000000" Cursor="Hand" MouseDown="MinimizeButton_MouseDown">
+                            <TextBlock Text="Minimize" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2" ToolTip="Minimize Free Draw"/>
+                        </Border>
+                    </WrapPanel>
+                </StackPanel>
             </Grid>
         </Canvas>
     </Grid>

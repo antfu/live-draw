@@ -7,11 +7,16 @@
         xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="AntFu7.FreeDraw.MainWindow"
         mc:Ignorable="d" ResizeMode="NoResize" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#11000000" AllowsTransparency="True" WindowStyle="None" Title="Free Draw Dev" Icon="Rescoures/icon.ico" Topmost="True" >
     <Window.Resources>
-        <SolidColorBrush x:Key ="FakeTransparent" Color="#01000000"/>
+        <Storyboard x:Key="Anim" TargetProperty="Width">
+            <DoubleAnimation From="40" To ="25" />
+        </Storyboard>
+        <SolidColorBrush x:Key="FakeTransparent" Color="#01000000"/>
+        <SolidColorBrush x:Key="TrueTransparent" Color="Transparent"/>
         <SolidColorBrush x:Key="SemitransparentGray" Color="#7F727272" />
         <SolidColorBrush x:Key="FunctionalButtonBackground" Color="#7F000000" />
         <SolidColorBrush x:Key="FunctionalButtonHover" Color="#7F212121" />
         <SolidColorBrush x:Key="FunctionalButtonActive" Color="#7F515151" />
+
         <SolidColorBrush x:Key="PaintingColor1" Color="#FF86E238"/>
         <SolidColorBrush x:Key="PaintingColor2" Color="#FF38E2A8"/>
         <SolidColorBrush x:Key="PaintingColor3" Color="#FF359EC9"/>
@@ -59,7 +64,7 @@
             <Setter Property="TextElement.FontFamily" Value="Consolas" />
             <Setter Property="Cursor" Value="Pen"/>
             <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="40"/>
+            <Setter Property="Height" Value="{Binding Width, RelativeSource={RelativeSource Self}}"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="BorderBrush" Value="White"/>
@@ -102,83 +107,106 @@
                     <StackPanel.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
                     </StackPanel.Effect>
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <Button x:Name="DetialToggler" Style="{StaticResource FunctionalButton}" Padding="0" HorizontalAlignment="Left" Background="{StaticResource FakeTransparent}" VerticalAlignment="Center" Click="DetialToggler_Click">
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,5,0">
+                        <Button x:Name="DetailToggler" Style="{StaticResource FunctionalButton}" Padding="0" HorizontalAlignment="Left" Background="{StaticResource FakeTransparent}" VerticalAlignment="Center" Click="DetailToggler_Click" Width="20" Height="20" Margin="0">
                             <Path Fill="White" Stretch="Uniform" Width="8" Data="{DynamicResource IconArrow}" RenderTransformOrigin="0.5,0.5">
                                 <Path.RenderTransform>
-                                    <RotateTransform x:Name="DetialTogglerRotate" Angle="270"/>
+                                    <RotateTransform x:Name="DetailTogglerRotate" Angle="270"/>
                                 </Path.RenderTransform>
                             </Path>
                         </Button>
-                        <Border x:Name="PaletteGrip" Background="{StaticResource SemitransparentGray}" Width="120" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Left" Margin="20,0,30,0" >
-                            <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,2"/>
+                        <Border x:Name="PaletteGrip" Background="{StaticResource SemitransparentGray}" Width="80" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Left" Margin="5" >
+                            <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0"/>
                         </Border>
                         <Button x:Name="CloseButton" Style="{StaticResource FunctionalButton}" Padding="0"  Background="#FFFF7774" HorizontalAlignment="Right" Click="CloseButton_MouseDown" Width="20" Height="20" >
                             <Path Fill="White" Stretch="Uniform" Height="9" Data="{DynamicResource IconCross}"/>
                         </Button>
-                    </Grid>
-                    <WrapPanel Margin="0,10,0,0">
+                    </StackPanel>
+                    <WrapPanel Margin="0,5,0,0" Width="208">
                         <WrapPanel.Resources>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ColorPicker}"/>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ColorPicker}">
+                                <Setter x:Name="ColorPickerSize" Property="Width" Value="{Binding Path=Width,ElementName=ColorPickerController}"/>
+                            </Style>
                         </WrapPanel.Resources>
-                        <Button Background="{StaticResource PaintingColor1}"  Click="ColorSelector_MouseDown" x:Name="DefaultColor"/>
-                        <Button Background="{StaticResource PaintingColor2}" Click="ColorSelector_MouseDown"/>
-                        <Button Background="{StaticResource PaintingColor3}"  Click="ColorSelector_MouseDown"/>
-                        <Button Background="{StaticResource PaintingColor4}" Click="ColorSelector_MouseDown"/>
+                        <TextBlock x:Name="ColorPickerController" Width="25" Visibility="Collapsed"/>
+                        <Button Background="{StaticResource PaintingColor2}" Click="ColorSelector_MouseDown" x:Name="DefaultColor"/>
+                        <Button Background="{StaticResource PaintingColor1}" Click="ColorSelector_MouseDown"/>
                         <Button Background="{StaticResource PaintingColor5}" Click="ColorSelector_MouseDown"/>
+                        <Button Background="{StaticResource PaintingColor9}" Click="ColorSelector_MouseDown"/>
+                        <Button Background="{StaticResource PaintingColor10}" Click="ColorSelector_MouseDown"/>
+                        <Button Background="{StaticResource PaintingColor11}" Click="ColorSelector_MouseDown"/>
+                        <Button Background="{StaticResource PaintingColor3}" Click="ColorSelector_MouseDown"/>
                         <Button Background="{StaticResource PaintingColor6}" Click="ColorSelector_MouseDown"/>
                         <Button Background="{StaticResource PaintingColor7}" Click="ColorSelector_MouseDown"/>
                         <Button Background="{StaticResource PaintingColor8}" Click="ColorSelector_MouseDown"/>
-                        <Button Background="{StaticResource PaintingColor9}"  Click="ColorSelector_MouseDown"/>
-                        <Button Background="{StaticResource PaintingColor10}"  Click="ColorSelector_MouseDown"/>
-                        <Button Background="{StaticResource PaintingColor11}"  Click="ColorSelector_MouseDown"/>
-                        <Button Background="{StaticResource PaintingColor12}"  Click="ColorSelector_MouseDown"/>
+                        <Button Background="{StaticResource PaintingColor4}" Click="ColorSelector_MouseDown"/>
+                        <Button Background="{StaticResource PaintingColor12}" Click="ColorSelector_MouseDown"/>
                     </WrapPanel>
-                    <Grid x:Name="SliderPanel" Margin="0,10,0,0">
-                        <Border Background="{StaticResource SemitransparentGray}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,0,5,0" CornerRadius="3">
-                            <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="15"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Slider Margin="5,0,30,0" Minimum="1" SmallChange="0.02" Value="2" ValueChanged="Slider_ValueChanged" LargeChange="0.1" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" Focusable="False" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Maximum="5" />
-                    </Grid>
-                    <WrapPanel x:Name="ButtonPanel" HorizontalAlignment="Center" Margin="0,10,0,0">
-                        <WrapPanel.Resources>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource FunctionalButton}">
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Width" Value="35"/>
-                                <Setter Property="Height" Value="35"/>
+                    <StackPanel x:Name="DetailPanel">
+                        <StackPanel.Style>
+                            <Style >
+                                <Style.Triggers>
+                                    <Trigger Property="StackPanel.Opacity" Value="0">
+                                        <Setter Property="StackPanel.Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
-                            <Style TargetType="Path">
-                                <Setter Property="Fill" Value="White"/>
-                                <Setter Property="Stretch" Value="Uniform"/>
-                                <Setter Property="Width" Value="15"/>
-                            </Style>
-                        </WrapPanel.Resources>
-                        <Button x:Name="UndoButton" Click="UndoButton_MouseDown">
-                            <Path Data="{DynamicResource IconUndo}"/>
-                        </Button>
-                        <Button x:Name="RedoButton" Padding="0" Height="35" Width="35">
-                            <Path Data="{DynamicResource IconUndo}" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                    <ScaleTransform ScaleX="-1"/>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Button>
-                        <Button x:Name="EraserButton" Click="EraserButton_MouseDown">
-                            <Path Data="{DynamicResource IconEraser}"/>
-                        </Button>
-                        <Button x:Name="ClearButton" Click="ClearButton_MouseDown" ToolTip="Clear screen" >
-                            <Path Data="{DynamicResource IconTrashBox}" Width="13"/>
-                        </Button>
-                        <Button x:Name="SaveButton" Click="SaveButton_MouseDown" ToolTip="Save">
-                            <Path Data="{DynamicResource IconSave}" Width="14"/>
-                        </Button>
-                        <Button x:Name="LoadButton" Click="LoadButton_MouseDown" ToolTip="Load">
-                            <Path Data="{DynamicResource IconLoad}" Width="14"/>
-                        </Button>
-                        <Button Content="Export" x:Name="ExportButton" ToolTip="Export as Image"/>
-                        <Button Content="Minimize" x:Name="MinimizeButton" Click="MinimizeButton_MouseDown"  ToolTip="Minimize Free Draw" />
-                        <Button Content="Enabled" x:Name="EnableButton" Click="EnableButton_MouseDown"/>
-                    </WrapPanel>
+                        </StackPanel.Style>
+                        <Grid x:Name="SliderPanel" Margin="0,10,0,0">
+                            <Border Background="{StaticResource SemitransparentGray}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,0,5,0" CornerRadius="3">
+                                <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="15"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <Slider Margin="5,0,30,0" Minimum="1" SmallChange="0.02" Value="2" ValueChanged="Slider_ValueChanged" LargeChange="0.1" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" Focusable="False" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Maximum="5" />
+                        </Grid>
+                        <WrapPanel x:Name="ButtonPanel" HorizontalAlignment="Center" Margin="0,10,0,0">
+                            <WrapPanel.Resources>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource FunctionalButton}">
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Width" Value="35"/>
+                                    <Setter Property="Height" Value="35"/>
+                                </Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Fill" Value="White"/>
+                                    <Setter Property="Stretch" Value="Uniform"/>
+                                    <Setter Property="Width" Value="15"/>
+                                </Style>
+                            </WrapPanel.Resources>
+                            <Button x:Name="UndoButton" Click="UndoButton_MouseDown">
+                                <Path Data="{DynamicResource IconUndo}"/>
+                            </Button>
+                            <Button x:Name="RedoButton" Padding="0" Height="35" Width="35">
+                                <Path Data="{DynamicResource IconUndo}" RenderTransformOrigin="0.5,0.5">
+                                    <Path.RenderTransform>
+                                        <ScaleTransform ScaleX="-1"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Button>
+                            <Button x:Name="EraserButton" Click="EraserButton_MouseDown">
+                                <Path Data="{DynamicResource IconEraser}"/>
+                            </Button>
+                            <Button x:Name="ClearButton" Click="ClearButton_MouseDown" ToolTip="Clear screen" >
+                                <Path Data="{DynamicResource IconTrashBox}" Width="13"/>
+                            </Button>
+                            <Button x:Name="SaveButton" Click="SaveButton_MouseDown" ToolTip="Save">
+                                <Path Data="{DynamicResource IconSave}" Width="13"/>
+                            </Button>
+                            <Button x:Name="LoadButton" Click="LoadButton_MouseDown" ToolTip="Load">
+                                <Path Data="{DynamicResource IconLoad}" Width="14"/>
+                            </Button>
+                            <Button x:Name="ExportButton" ToolTip="Export as Image">
+                                <Path Data="{DynamicResource IconExport}"/>
+                            </Button>
+                            <Button x:Name="MinimizeButton" Click="MinimizeButton_MouseDown"  ToolTip="Minimize Free Draw" >
+                                <Path Data="{DynamicResource IconMinimize}"/>
+                            </Button>
+                            <Button x:Name="HideButton"  ToolTip="Hide ink" Click="HideButton_Click" >
+                                <Path Data="{DynamicResource IconCloseEye}"/>
+                            </Button>
+                            <Button x:Name="EnableButton" Click="EnableButton_MouseDown">
+                                <Path Data="{DynamicResource IconNoAccess}"/>
+                            </Button>
+                        </WrapPanel>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Canvas>

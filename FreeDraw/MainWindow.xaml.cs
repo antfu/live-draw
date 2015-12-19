@@ -9,6 +9,7 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace AntFu7.FreeDraw
@@ -20,15 +21,16 @@ namespace AntFu7.FreeDraw
         private Button _selectedColor;
         private string _staticInfo = "";
         private bool _displayingInfo;
-        private bool _displayDetialPanel;
+        private bool _displayDetailPanel;
+        private bool _inkVisable = true;
         private bool _eraserMode;
         private bool _enable;
 
-        //Background Brushs for Buttons
-        private readonly SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
-        private readonly SolidColorBrush _fakeBrush = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
-
-
+        private readonly static Duration AnimationDuration0 = new Duration(new TimeSpan(0, 0, 0, 0, 100));
+        private readonly static Duration AnimationDuration1 = new Duration(new TimeSpan(0, 0, 0, 0, 300));
+        private readonly static Duration AnimationDuration2 = new Duration(new TimeSpan(0, 0, 0, 0, 500));
+        private const string ButtonActived = "Actived";
+        private const string ButtonUnactived = "";
         #region Mouse Throught
 
         private const int WsExTransparent = 0x20;
@@ -50,46 +52,68 @@ namespace AntFu7.FreeDraw
                 SetWindowLong(hwnd, GwlExstyle, extendedStyle & ~(uint)WsExTransparent);
         }
 
-        private void ToggleDetial(bool v)
+
+        #endregion
+
+        public MainWindow()
+        {
+            if (!Directory.Exists("Save"))
+                Directory.CreateDirectory("Save");
+            InitializeComponent();
+            SelectColor(DefaultColor);
+            SetEnable(true);
+            DetailPanel.Opacity = 0;
+        }
+
+        private void ToggleDetail(bool v)
         {
             if (v)
             {
-                DetialTogglerRotate.Angle = 90;
-                SliderPanel.Visibility=Visibility.Visible;
-                ButtonPanel.Visibility=Visibility.Visible;
+                DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(90, AnimationDuration1));
+                ColorPickerController.BeginAnimation(WidthProperty, new DoubleAnimation(40, AnimationDuration1));
+                DetailPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, AnimationDuration2));
+                PaletteGrip.BeginAnimation(WidthProperty,new DoubleAnimation(140,AnimationDuration1));
             }
             else
             {
-                DetialTogglerRotate.Angle = 270;
-                SliderPanel.Visibility = Visibility.Collapsed;
-                ButtonPanel.Visibility = Visibility.Collapsed;
+                DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(270, AnimationDuration1));
+                ColorPickerController.BeginAnimation(WidthProperty, new DoubleAnimation(25, AnimationDuration1));
+                DetailPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, AnimationDuration2));
+                PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(80, AnimationDuration1));
             }
-            _displayDetialPanel = v;
+            _displayDetailPanel = v;
+        }
+
+        private void SetInkVisible(bool v)
+        {
+            if (v)
+            {
+                MainInkCanvas.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, AnimationDuration1));
+                HideButton.Tag = ButtonUnactived;
+            }
+            else
+            {
+                
+                MainInkCanvas.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, AnimationDuration1));
+                HideButton.Tag = ButtonActived;
+            }
+            SetEnable(v);
+            _inkVisable = v;
         }
         private void SetEnable(bool b)
         {
             if (b)
             {
-                EnableButton.Tag = "Actived";
-                Background = _fakeBrush;
+                EnableButton.Tag = ButtonUnactived;
+                Background = Resources["FakeTransparent"] as Brush;
             }
             else
             {
-                EnableButton.Tag = null;
-                Background = _transparentBrush;
+                EnableButton.Tag = ButtonActived;
+                Background = Resources["TrueTransparent"] as Brush;
             }
             _enable = b;
         }
-        #endregion
-
-        public MainWindow()
-        {
-            InitializeComponent();
-            SelectColor(DefaultColor);
-            SetEnable(true);
-            ToggleDetial(false);
-        }
-
 
         private void SelectColor(Button b)
         {
@@ -117,13 +141,6 @@ namespace AntFu7.FreeDraw
         private static string GetFileNameFromPath(string path)
         {
             return Path.GetFileName(path);
-        }
-
-        private static FileStream GetFileStream(string filename)
-        {
-            if (!Directory.Exists("Save"))
-                Directory.CreateDirectory("Save");
-            return new FileStream("Save\\" + filename, FileMode.OpenOrCreate);
         }
 
         private async void Display(string info)
@@ -166,7 +183,16 @@ namespace AntFu7.FreeDraw
             brushPreview.Height = s;
             brushPreview.Width = s;
         }
+
         private void CloseButton_MouseDown(object sender, RoutedEventArgs e)
+        {
+            Topmost = false;
+            var anim = new DoubleAnimation(0,AnimationDuration1);
+            anim.Completed += FadeOutCompleted;
+            BeginAnimation(OpacityProperty,anim);
+        }
+
+        private void FadeOutCompleted(object sender, EventArgs e)
         {
             Application.Current.Shutdown(0);
         }
@@ -196,18 +222,53 @@ namespace AntFu7.FreeDraw
 
         private void SaveButton_MouseDown(object sender, RoutedEventArgs e)
         {
-            var fn = "Test.fdw";
-            using (var s = GetFileStream(fn))
-                MainInkCanvas.Strokes.Save(s);
-            Display("Saved to " + fn);
+            var dialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                DefaultExt = ".fdw",
+                Filter = "Free Draw Save (*.fdw)|*fdw|Extensible Markup Language (*.xml)|*.xml",
+                FileName = GenerateFileName(),
+                InitialDirectory = Directory.GetCurrentDirectory() + "Save"
+            };
+            var r = dialog.ShowDialog();
+            if (r == true)
+            {
+                try
+                {
+                    using (var s = dialog.OpenFile())
+                        MainInkCanvas.Strokes.Save(s);
+                    Display("Saved to " + dialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    Display("Fail to save");
+                }
+            }
         }
 
         private void LoadButton_MouseDown(object sender, RoutedEventArgs e)
         {
-            var fn = "Test.fdw";
-            using (var s = GetFileStream(fn))
-                MainInkCanvas.Strokes = new StrokeCollection(s);
-            Display("Loaded from " + fn);
+            var dialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                DefaultExt = ".fdw",
+                Filter = "Free Draw Save (*.fdw)|*fdw|Extensible Markup Language (*.xml)|*.xml",
+                
+            };
+            var r = dialog.ShowDialog();
+            if (r == true)
+            {
+                try
+                {
+                    using (var s = dialog.OpenFile())
+                        MainInkCanvas.Strokes = new StrokeCollection(s);
+                    Display("Loaded from " + dialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    Display("Fail to load");
+                }
+            }
         }
 
         private void MinimizeButton_MouseDown(object sender, RoutedEventArgs e)
@@ -221,6 +282,20 @@ namespace AntFu7.FreeDraw
             Display("Cleared");
         }
 
+        private void EnableButton_MouseDown(object sender, RoutedEventArgs e)
+        {
+            SetEnable(!_enable);
+        }
+
+        private void DetailToggler_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleDetail(!_displayDetailPanel);
+        }
+
+        private void HideButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetInkVisible(!_inkVisable);
+        }
         #region Drag
         private void StartDrag()
         {
@@ -257,14 +332,6 @@ namespace AntFu7.FreeDraw
 
         #endregion
 
-        private void EnableButton_MouseDown(object sender, RoutedEventArgs e)
-        {
-            SetEnable(!_enable);
-        }
 
-        private void DetialToggler_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleDetial(!_displayDetialPanel);
-        }
     }
 }

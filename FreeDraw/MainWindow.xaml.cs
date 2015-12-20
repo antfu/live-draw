@@ -60,11 +60,13 @@ namespace AntFu7.FreeDraw
             InitializeComponent();
             SetColor(DefaultColor);
             SetEnable(true);
+            SetTopMost(true);
             DetailPanel.Opacity = 0;
             MainInkCanvas.Strokes.StrokesChanged += StrokesChanged;
         }
-        private static void Exit(object sender, EventArgs e)
+        private void Exit(object sender, EventArgs e)
         {
+            if (IsUnsaved()) QuickSave("ExitingAutoSave_");
             Application.Current.Shutdown(0);
         }
         #endregion
@@ -106,17 +108,21 @@ namespace AntFu7.FreeDraw
         {
             if (v)
             {
-                DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(180, Duration3));
+                DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(180, Duration5));
                 ColorPickerController.BeginAnimation(WidthProperty, new DoubleAnimation(40, Duration3));
                 DetailPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, Duration4));
                 PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(130, Duration3));
+                MinimizeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, Duration3));
+                MinimizeButton.BeginAnimation(HeightProperty, new DoubleAnimation(0, 25, Duration3));
             }
             else
             {
-                DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(0, Duration3));
+                DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(0, Duration5));
                 ColorPickerController.BeginAnimation(WidthProperty, new DoubleAnimation(25, Duration3));
                 DetailPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, Duration4));
                 PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(80, Duration3));
+                MinimizeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, Duration3));
+                MinimizeButton.BeginAnimation(HeightProperty, new DoubleAnimation(25, 0, Duration3));
             }
             _displayDetailPanel = v;
         }
@@ -137,28 +143,24 @@ namespace AntFu7.FreeDraw
         }
         private void SetEnable(bool b)
         {
-            if (b)
-            {
-                EnableButton.Tag = ButtonUnactived;
-                Background = Application.Current.Resources["FakeTransparent"] as Brush;
-            }
-            else
-            {
-                EnableButton.Tag = ButtonActived;
-                Background = Application.Current.Resources["TrueTransparent"] as Brush;
-            }
+            EnableButton.Tag = b ? ButtonUnactived : ButtonActived;
+            Background = Application.Current.Resources[b ? "FakeTransparent" : "TrueTransparent"] as Brush;
             _enable = b;
+            SetTopMost(false);
         }
         private void SetColor(Button b)
         {
             if (ReferenceEquals(_selectedColor, b)) return;
             var solidColorBrush = b.Background as SolidColorBrush;
             if (solidColorBrush == null) return;
+
+            var ani = new ColorAnimation(solidColorBrush.Color, Duration3);
+
             MainInkCanvas.DefaultDrawingAttributes.Color = solidColorBrush.Color;
-            brushPreview.Background = b.Background;
-            b.Tag = "Selected";
+            brushPreview.Background.BeginAnimation(SolidColorBrush.ColorProperty, ani);
+            b.Tag = ButtonActived;
             if (_selectedColor != null)
-                _selectedColor.Tag = null;
+                _selectedColor.Tag = ButtonUnactived;
             _selectedColor = b;
         }
         private void SetBrushSize(double s)
@@ -166,8 +168,8 @@ namespace AntFu7.FreeDraw
             s = s * s;
             MainInkCanvas.DefaultDrawingAttributes.Height = s;
             MainInkCanvas.DefaultDrawingAttributes.Width = s;
-            brushPreview.Height = s;
-            brushPreview.Width = s;
+            brushPreview.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
+            brushPreview.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
         }
         private void SetEraserMode(bool v)
         {
@@ -184,6 +186,12 @@ namespace AntFu7.FreeDraw
                 SetStaticInfo("");
             }
             _eraserMode = v;
+        }
+
+        private void SetTopMost(bool v)
+        {
+            PinButton.Tag = v ? ButtonActived : ButtonUnactived;
+            Topmost = v;
         }
         #endregion
 
@@ -414,6 +422,10 @@ namespace AntFu7.FreeDraw
         {
             AnimatedClear();
         }
+        private void PinButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetTopMost(!Topmost);
+        }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (MainInkCanvas.Strokes.Count == 0)
@@ -509,6 +521,7 @@ namespace AntFu7.FreeDraw
         private void Palette_MouseLeave(object sender, MouseEventArgs e)
         { EndDrag(); }
         #endregion
+
 
     }
 }

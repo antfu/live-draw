@@ -7,25 +7,72 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Core.Implicit.xaml" />
-                <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml" />
                 <ResourceDictionary Source="IconDataDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <SolidColorBrush x:Key="FakeTransparent" Color="#01000000"/>
-            <SolidColorBrush x:Key="TrueTransparent" Color="Transparent"/>
-            <SolidColorBrush x:Key="SemitransparentGray" Color="#7F727272" />
-            <SolidColorBrush x:Key="QuartertransparentGray" Color="#3F727272" />
-            <SolidColorBrush x:Key="FunctionalButtonBackground" Color="#7F000000" />
-            <SolidColorBrush x:Key="FunctionalButtonHover" Color="#7F212121" />
-            <SolidColorBrush x:Key="FunctionalButtonActive" Color="#7F515151" />
+            <Color x:Key="FakeTransparentColor" >#01000000</Color>
+            <Color x:Key="TrueTransparentColor" >Transparent</Color>
+            <Color x:Key="QuartertransparentGrayColor">#3F727272</Color>
+            <Color x:Key="SemitransparentGrayColor">#7F727272</Color>
+            <Color x:Key="TriquartertransparentGrayColor" >#3F727272</Color>
+            <Color x:Key="FunctionalButtonBackgroundColor" >#7F000000</Color>
+            <Color x:Key="FunctionalButtonHoverColor" >#7F212121</Color>
+            <Color x:Key="FunctionalButtonActiveColor" >#7F515151</Color>
+
+            <SolidColorBrush x:Key="FakeTransparent" Color="{StaticResource FakeTransparentColor}"/>
+            <SolidColorBrush x:Key="TrueTransparent" Color="{StaticResource TrueTransparentColor}"/>
+            <SolidColorBrush x:Key="QuartertransparentGray" Color="{StaticResource QuartertransparentGrayColor}" />
+            <SolidColorBrush x:Key="SemitransparentGray" Color="{StaticResource SemitransparentGrayColor}" />
+            <SolidColorBrush x:Key="TriquartertransparentGray" Color="{StaticResource TriquartertransparentGrayColor}" />
+            <SolidColorBrush x:Key="FunctionalButtonBackground" Color="{StaticResource FunctionalButtonBackgroundColor}" />
+            <SolidColorBrush x:Key="FunctionalButtonHover" Color="{StaticResource FunctionalButtonHoverColor}" />
+            <SolidColorBrush x:Key="FunctionalButtonActive" Color="{StaticResource FunctionalButtonActiveColor}" />
 
             <Duration x:Key="Duration1">0:0:0:0.1</Duration>
             <Duration x:Key="Duration2">0:0:0:0.2</Duration>
             <Duration x:Key="Duration3">0:0:0:0.3</Duration>
             <Duration x:Key="Duration4">0:0:0:0.4</Duration>
             <Duration x:Key="Duration5">0:0:0:0.5</Duration>
+            <Duration x:Key="Duration10">0:0:0:1</Duration>
 
+            <ControlTemplate x:Key="SliderHorizontal" TargetType="{x:Type Slider}">
+                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                    <Grid>
+                        <Border x:Name="TrackBackground" Height="4.0" Margin="5,0" VerticalAlignment="center" Background="#FFB7B7B7" CornerRadius="1"/>
+                        <Track x:Name="PART_Track">
+                            <Track.Thumb>
+                                <Thumb x:Name="Thumb" Focusable="False" Height="13" Foreground="{TemplateBinding Foreground}" OverridesDefaultStyle="True" VerticalAlignment="Center" Width="{Binding RelativeSource={RelativeSource Self},Path=Height}">
+                                    <Thumb.Template>
+                                        <ControlTemplate>
+                                            <Grid>
+                                                <Border CornerRadius="10" Background="#FF6B6B6B"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard TargetName="Thumb" TargetProperty="Height">
+                                    <DoubleAnimation Duration="{StaticResource Duration1}" To="16"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard TargetName="Thumb" TargetProperty="Height">
+                                    <DoubleAnimation Duration="{StaticResource Duration3}" To="13"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
             <Style x:Key="ButtonContent" TargetType="{x:Type ContentPresenter}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -48,13 +95,40 @@
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{StaticResource FunctionalButtonHover}"/>
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="{StaticResource FunctionalButtonHoverColor}" Duration="{StaticResource Duration5}"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="{StaticResource FunctionalButtonBackgroundColor}" Duration="{StaticResource Duration5}"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
                     </Trigger>
                     <Trigger Property="Tag" Value="Actived">
-                        <Setter Property="Background" Value="{StaticResource FunctionalButtonActive}"/>
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="{StaticResource FunctionalButtonActiveColor}" Duration="{StaticResource Duration5}"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="{StaticResource FunctionalButtonBackgroundColor}" Duration="{StaticResource Duration5}"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
                     </Trigger>
                 </Style.Triggers>
             </Style>
+
             <Style x:Key="ColorPicker" TargetType="{x:Type Button}">
                 <Setter Property="TextElement.Foreground" Value="White" />
                 <Setter Property="TextElement.FontSize" Value="10" />
@@ -69,8 +143,8 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
                             <Grid>
-                                <Border x:Name="ControlBorder" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
-                                    <ContentPresenter Style="{StaticResource ButtonContent}" />
+                                <Border x:Name="ControlBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
+                                    <Path x:Name="CheckedIcon" Fill="White" Stretch="Uniform" Height="0" Data="{DynamicResource IconChecked}"/>
                                 </Border>
                             </Grid>
                             <ControlTemplate.Triggers>
@@ -90,60 +164,71 @@
                                         </BeginStoryboard>
                                     </Trigger.ExitActions>
                                 </Trigger>
+                                <Trigger Property="Tag" Value="Actived">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard TargetName="CheckedIcon" TargetProperty="Height">
+                                                <DoubleAnimation To="12" Duration="{StaticResource Duration1}"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard TargetName="CheckedIcon" TargetProperty="Height">
+                                                <DoubleAnimation To="0" Duration="{StaticResource Duration3}"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Style.Triggers>
-                    <Trigger Property="Tag" Value="Selected">
-                        <Setter Property="Content">
-                            <Setter.Value>
-                                <Path Fill="White" Stretch="Uniform" Height="12" Data="{DynamicResource IconChecked}"/>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
             </Style>
-            <ControlTemplate x:Key="ResponseButton" TargetType="Button">
+            <ControlTemplate x:Key="ResponseButtonTemplate" TargetType="Button">
                 <Grid Background="{StaticResource FakeTransparent}">
-                    <Border x:Name="Backborder" Background="{TemplateBinding Background}" CornerRadius="5" Width="0" Height="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <ContentPresenter/>
+                    <Border x:Name="Backborder" Background="{TemplateBinding Background}" CornerRadius="5" Width="0" Height="{Binding Path=Width,RelativeSource={RelativeSource Self}}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ContentControl Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                 </Grid>
                 <ControlTemplate.Triggers>
                     <Trigger Property="Button.IsMouseOver" Value="True">
                         <Trigger.EnterActions>
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="Backborder" Storyboard.TargetProperty="Width" To="20" Duration="{StaticResource Duration3}"/>
-                                    <DoubleAnimation Storyboard.TargetName="Backborder" Storyboard.TargetProperty="Height" To="20" Duration="{StaticResource Duration3}"/>
+                                    <DoubleAnimation Storyboard.TargetName="Backborder" Storyboard.TargetProperty="Width" From="0" To="20" Duration="{StaticResource Duration3}"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.EnterActions>
                         <Trigger.ExitActions>
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="Backborder" Storyboard.TargetProperty="Width" To="0" Duration="{StaticResource Duration3}"/>
-                                    <DoubleAnimation Storyboard.TargetName="Backborder" Storyboard.TargetProperty="Height" To="0" Duration="{StaticResource Duration3}"/>
+                                    <DoubleAnimation Storyboard.TargetName="Backborder" Storyboard.TargetProperty="Width" From="20"  To="0" Duration="{StaticResource Duration3}"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.ExitActions>
                     </Trigger>
                 </ControlTemplate.Triggers>
             </ControlTemplate>
-            <Style x:Key="CloseButton" TargetType="Button">
+            <Style  x:Key="ResponseButton" TargetType="Button">
+                <Setter Property="Width" Value="25"/>
+                <Setter Property="Height" Value ="25"/>
+                <Setter Property ="Template" Value="{StaticResource ResponseButtonTemplate}"/>
+            </Style>
+            <Style x:Key="SpinningButton" TargetType="Button" BasedOn="{StaticResource ResponseButton}">
+                <Setter Property="MaxWidth" Value ="360"/>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Trigger.EnterActions>
                             <BeginStoryboard>
                                 <Storyboard >
-                                    <DoubleAnimation Storyboard.TargetProperty="MaxWidth" From="360" To="450" Duration="{StaticResource Duration2}"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="MaxWidth" From="360" To="540" Duration="{StaticResource Duration5}"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.EnterActions>
                         <Trigger.ExitActions>
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="MaxWidth" From="360" To="450" Duration="{StaticResource Duration2}"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="MaxWidth" From="360" To="540" Duration="{StaticResource Duration5}"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.ExitActions>

@@ -19,6 +19,7 @@
         <SolidColorBrush x:Key="PaintingColor10" Color="#FFDF2828"/>
         <SolidColorBrush x:Key="PaintingColor11" Color="#FFE2386D"/>
         <SolidColorBrush x:Key="PaintingColor12" Color="#FF1E1E1E"/>
+      
     </Window.Resources>
     <Grid>
         <InkCanvas x:Name="MainInkCanvas" Background="{x:Null}" MoveEnabled="False" ResizeEnabled="False">
@@ -27,81 +28,101 @@
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
         <Canvas>
-            <Grid x:Name="Palette" HorizontalAlignment="Left" VerticalAlignment="Top" Width="310" MouseMove="Palette_MouseMove" MouseUp="Palette_MouseUp" MouseLeave="Palette_MouseLeave" Canvas.Top="15" Canvas.Left="15">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50" Background="{StaticResource FakeTransparent}" Width="210">
+            <Grid x:Name="Palette" HorizontalAlignment="Left" VerticalAlignment="Top" Width="335" MouseMove="Palette_MouseMove" MouseUp="Palette_MouseUp" MouseLeave="Palette_MouseLeave" Canvas.Top="15" Canvas.Left="15">
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50" Background="{StaticResource FakeTransparent}">
                     <StackPanel.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
                     </StackPanel.Effect>
-                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="0">
-                        <Border x:Name="PaletteGrip" Background="{StaticResource QuartertransparentGray}" Width="80" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Left" Margin="0,5,5,5" >
-                            <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0"/>
-                            <Border.Triggers>
-                                <EventTrigger RoutedEvent="Border.MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard TargetName="PaletteGrip" TargetProperty="(Background).(SolidColorBrush.Color)">
-                                            <ColorAnimation To ="#9F727272" Duration="{StaticResource Duration2}"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                                <EventTrigger RoutedEvent="Border.MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard TargetName="PaletteGrip" TargetProperty="(Background).(SolidColorBrush.Color)">
-                                            <ColorAnimation To ="#3F727272" Duration="{StaticResource Duration2}"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Border.Triggers>
-                        </Border>
-                        <Button x:Name="DetailToggler" Template="{StaticResource ResponseButton}" Padding="0" HorizontalAlignment="Left" Background="#7F86C91F" VerticalAlignment="Center" Click="DetailToggler_Click" Width="25" Height="25" Margin="0" BorderThickness="0">
-                            <Path Fill="White" Stretch="Uniform" Width="10"  Data="{DynamicResource IconArrow}" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,1,0,0">
-                                <Path.RenderTransform>
-                                    <RotateTransform x:Name="DetailTogglerRotate"/>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Button>
-                        <Button x:Name="CloseButton" Style="{StaticResource CloseButton}" Template="{StaticResource ResponseButton}" Background="#FFFF7774" HorizontalAlignment="Right" Click="CloseButton_Click" Width="25" Height="25" MaxWidth="360" Padding="0" VerticalAlignment="Center" >
-                            <Path x:Name="CrossPath" Fill="White" Stretch="Uniform" Height="10" Data="{DynamicResource IconCross}" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" Margin="1,1,0,0">
-                                <Path.RenderTransform >
-                                    <RotateTransform x:Name="TransRotate" Angle="{Binding ElementName=CloseButton,Path=MaxWidth}"/>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Button>
+                    <Border x:Name="PaletteGrip" Background="{StaticResource QuartertransparentGray}" Width="80" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Center" Margin="0,0,25,0" >
+                        <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0"/>
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="Border.MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard TargetName="PaletteGrip" TargetProperty="(Background).(SolidColorBrush.Color)">
+                                        <ColorAnimation To ="#9F727272" Duration="{StaticResource Duration2}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Border.MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard TargetName="PaletteGrip" TargetProperty="(Background).(SolidColorBrush.Color)">
+                                        <ColorAnimation To ="#3F727272" Duration="{StaticResource Duration2}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <WrapPanel Margin="0" HorizontalAlignment="Center" Width="208">
+                            <WrapPanel.Resources>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ColorPicker}">
+                                    <Setter x:Name="ColorPickerSize" Property="Width" Value="{Binding Path=Width,ElementName=ColorPickerController}"/>
+                                </Style>
+                            </WrapPanel.Resources>
+                            <TextBlock x:Name="ColorPickerController" Width="25" Visibility="Collapsed"/>
+                            <Button Background="{StaticResource PaintingColor2}" Click="ColorPickers_Click" x:Name="DefaultColor"/>
+                            <Button Background="{StaticResource PaintingColor1}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor5}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor9}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor10}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor11}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor3}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor6}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor7}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor8}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor4}" Click="ColorPickers_Click"/>
+                            <Button Background="{StaticResource PaintingColor12}" Click="ColorPickers_Click"/>
+                        </WrapPanel>
+                        <StackPanel VerticalAlignment="Top" Margin="0,8,0,0">
+                            <StackPanel.Resources>
+                                <Style TargetType="Path">
+                                    <Setter Property="Fill" Value="White"/>
+                                    <Setter Property="Stretch" Value="Uniform"/>
+                                    <Setter Property="Width" Value="10"/>
+                                    <Setter Property="RenderTransformOrigin" Value ="0.5,0.5"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property ="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <Button x:Name="CloseButton" Style="{StaticResource SpinningButton}" Background="#FFFF7774" Click="CloseButton_Click"  VerticalAlignment="Center" ToolTip="Exit" >
+                                <Path Data="{DynamicResource IconCross}" Margin="1,1,0,0">
+                                    <Path.RenderTransform >
+                                        <RotateTransform Angle="{Binding ElementName=CloseButton,Path=MaxWidth}"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Button>
+                            <Button x:Name="DetailToggler" Style="{StaticResource ResponseButton}" Background="#FF86C91F" VerticalAlignment="Center" Click="DetailToggler_Click" ToolTip="Toggle more option" >
+                                <Path Data="{DynamicResource IconArrow}" Margin="0,1,0,0">
+                                    <Path.RenderTransform>
+                                        <RotateTransform x:Name="DetailTogglerRotate"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Button>
+                            <Button x:Name="MinimizeButton" Style="{StaticResource SpinningButton}" Background="#FF0F9DE4" Click="MinimizeButton_Click"  VerticalAlignment="Center" Height="0" Opacity="0" ToolTip="Minimize Free Draw" >
+                                <Path Width="12" Data="{DynamicResource IconMinimize}" Margin="1,1,0,0">
+                                    <Path.RenderTransform >
+                                        <RotateTransform Angle="{Binding MaxWidth, ElementName=MinimizeButton}"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
-                    <WrapPanel Margin="0,5,0,0" HorizontalAlignment="Center">
-                        <WrapPanel.Resources>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ColorPicker}">
-                                <Setter x:Name="ColorPickerSize" Property="Width" Value="{Binding Path=Width,ElementName=ColorPickerController}"/>
-                            </Style>
-                        </WrapPanel.Resources>
-                        <TextBlock x:Name="ColorPickerController" Width="25" Visibility="Collapsed"/>
-                        <Button Background="{StaticResource PaintingColor2}" Click="ColorPickers_Click" x:Name="DefaultColor"/>
-                        <Button Background="{StaticResource PaintingColor1}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor5}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor9}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor10}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor11}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor3}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor6}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor7}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor8}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor4}" Click="ColorPickers_Click"/>
-                        <Button Background="{StaticResource PaintingColor12}" Click="ColorPickers_Click"/>
-                    </WrapPanel>
-                    <StackPanel x:Name="DetailPanel">
+                    <StackPanel x:Name="DetailPanel" Margin="0,0,25,0">
                         <StackPanel.Style>
-                            <Style >
+                            <Style TargetType="StackPanel">
                                 <Style.Triggers>
-                                    <Trigger Property="StackPanel.Opacity" Value="0">
-                                        <Setter Property="StackPanel.Visibility" Value="Collapsed"/>
+                                    <Trigger Property="Opacity" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
                         <Grid x:Name="SliderPanel" Margin="0,10,0,0">
                             <Border Background="{StaticResource SemitransparentGray}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,0,5,0" CornerRadius="3">
-                                <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="15"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <Slider Margin="5,0,30,0" Minimum="1" SmallChange="0.02" Value="2" ValueChanged="Slider_ValueChanged" LargeChange="0.1" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" Focusable="False" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Maximum="5" />
+                            <Slider Background="{StaticResource FakeTransparent}" Margin="5,0,30,0" Minimum="1" SmallChange="0.02" Value="2" ValueChanged="Slider_ValueChanged" LargeChange="0.1" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" Focusable="False" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Maximum="5" BorderBrush="{x:Null}" Template="{StaticResource SliderHorizontal}" Foreground="#FFBC1919" Height="18" />
                         </Grid>
                         <WrapPanel x:Name="ButtonPanel" HorizontalAlignment="Center" Margin="0,10,0,0">
                             <WrapPanel.Resources>
@@ -132,6 +153,9 @@
                             <Button x:Name="ClearButton" Click="ClearButton_Click" ToolTip="Clear screen" >
                                 <Path Data="{DynamicResource IconTrashBox}" Width="13"/>
                             </Button>
+                            <Button x:Name="PinButton" ToolTip="Topmost" Click="PinButton_Click" >
+                                <Path Data="{DynamicResource IconPin}" Width="13"/>
+                            </Button>
                             <Button x:Name="SaveButton" Click="SaveButton_Click" ToolTip="Save ink to file / Right click to choose directory" PreviewMouseRightButtonDown="SaveButton_RightClick">
                                 <Path Data="{DynamicResource IconSave}" Width="13"/>
                             </Button>
@@ -140,9 +164,6 @@
                             </Button>
                             <Button x:Name="ExportButton" ToolTip="Export as image (Unfinished)">
                                 <Path Data="{DynamicResource IconExport}"/>
-                            </Button>
-                            <Button x:Name="MinimizeButton" Click="MinimizeButton_Click"  ToolTip="Minimize Free Draw" >
-                                <Path Data="{DynamicResource IconMinimize}"/>
                             </Button>
                             <Button x:Name="HideButton"  ToolTip="Hide ink" Click="HideButton_Click" >
                                 <Path Data="{DynamicResource IconCloseEye}"/>

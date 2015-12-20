@@ -28,40 +28,90 @@
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
         <Canvas>
-            <Grid x:Name="Palette" HorizontalAlignment="Left" VerticalAlignment="Top" Width="335" MouseMove="Palette_MouseMove" MouseUp="Palette_MouseUp" MouseLeave="Palette_MouseLeave" Canvas.Top="15" Canvas.Left="15">
-
+            <Grid x:Name="Palette" HorizontalAlignment="Left" VerticalAlignment="Top" Width="340" MouseMove="Palette_MouseMove" MouseUp="Palette_MouseUp" MouseLeave="Palette_MouseLeave" Canvas.Top="15" Canvas.Left="15">
+                <Grid x:Name="DockingButton" >
+                    <Grid.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="{StaticResource QuartertransparentGray}"/>
+                            <Style.Triggers>
+                                <Trigger Property ="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard TargetProperty="(Background).(SolidColorBrush.Color)">
+                                                <ColorAnimation To ="#9F727272" Duration="{StaticResource Duration2}"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard TargetProperty="(Background).(SolidColorBrush.Color)">
+                                                <ColorAnimation To ="#3F727272" Duration="{StaticResource Duration2}"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Resources>
+                    <Border x:Name="PaletteGrip"  MouseDown="PaletteGrip_MouseDown" Cursor="SizeAll" Width="80" Height="20" CornerRadius="5"  HorizontalAlignment="Center" Margin="0,30,25,0" VerticalAlignment="Top" >
+                        <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0"/>
+                    </Border>
+                    <Border x:Name="LeftDockingButton" Width="20" Height="70" HorizontalAlignment="Right" Margin="0,0,30,0">
+                        <Border.CornerRadius>
+                            <CornerRadius TopRight="7" BottomRight="7"></CornerRadius>
+                        </Border.CornerRadius>
+                        <Path Fill="White" Stretch="Uniform" Width="9" Data="{StaticResource IconArrow}" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="-90"/>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Border>
+                    <Border x:Name="TopDuckingButton" Width="70" Height="20" HorizontalAlignment="Center" Margin="0,0,25,30" VerticalAlignment="Bottom">
+                        <Border.CornerRadius>
+                            <CornerRadius BottomLeft="7" BottomRight="7"></CornerRadius>
+                        </Border.CornerRadius>
+                        <Path Fill="White" Stretch="Uniform" Width="9" Data="{StaticResource IconArrow}" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="0"/>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Border>
+                    <Border x:Name="RightDockingButton" Width="20" Height="70" HorizontalAlignment="Left" Margin="30,0,0,0">
+                        <Border.CornerRadius>
+                            <CornerRadius TopLeft="7" BottomLeft="7"></CornerRadius>
+                        </Border.CornerRadius>
+                        <Path Fill="White" Stretch="Uniform" Width="9" Data="{StaticResource IconArrow}" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90"/>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Border>
+                </Grid>
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50" Background="{StaticResource FakeTransparent}">
                     <StackPanel.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
                     </StackPanel.Effect>
-                    <Border x:Name="PaletteGrip" Background="{StaticResource QuartertransparentGray}" Width="80" Height="20" CornerRadius="5" Cursor="SizeAll" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Center" Margin="0,0,25,0" >
-                        <TextBlock x:Name="InfoBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0"/>
-                        <Border.Triggers>
-                            <EventTrigger RoutedEvent="Border.MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard TargetName="PaletteGrip" TargetProperty="(Background).(SolidColorBrush.Color)">
-                                        <ColorAnimation To ="#9F727272" Duration="{StaticResource Duration2}"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="Border.MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard TargetName="PaletteGrip" TargetProperty="(Background).(SolidColorBrush.Color)">
-                                        <ColorAnimation To ="#3F727272" Duration="{StaticResource Duration2}"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Border.Triggers>
-                    </Border>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <WrapPanel Margin="0" HorizontalAlignment="Center" Width="208">
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                        <WrapPanel x:Name="ColorPickersPanel" Margin="0" HorizontalAlignment="Center" Width="208">
                             <WrapPanel.Resources>
                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ColorPicker}">
                                     <Setter x:Name="ColorPickerSize" Property="Width" Value="{Binding Path=Width,ElementName=ColorPickerController}"/>
+                                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    <Setter Property="RenderTransform" Value="{Binding ElementName=ColorPickerController,Path=RenderTransform}"/>
                                 </Style>
                             </WrapPanel.Resources>
-                            <TextBlock x:Name="ColorPickerController" Width="25" Visibility="Collapsed"/>
-                            <Button Background="{StaticResource PaintingColor2}" Click="ColorPickers_Click" x:Name="DefaultColor"/>
+                            <TextBlock x:Name="ColorPickerController" Width="25" Visibility="Collapsed">
+                                <TextBlock.RenderTransform>
+                                    <RotateTransform Angle="0"/>
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                            <Button Background="{StaticResource PaintingColor2}" Click="ColorPickers_Click" x:Name="DefaultColor" />
                             <Button Background="{StaticResource PaintingColor1}" Click="ColorPickers_Click"/>
                             <Button Background="{StaticResource PaintingColor5}" Click="ColorPickers_Click"/>
                             <Button Background="{StaticResource PaintingColor9}" Click="ColorPickers_Click"/>
@@ -108,7 +158,7 @@
                             </Button>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel x:Name="DetailPanel" Margin="0,0,25,0">
+                    <StackPanel x:Name="DetailPanel" Margin="0,0,25,10">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Style.Triggers>
@@ -118,7 +168,7 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <Grid x:Name="SliderPanel" Margin="0,10,0,0">
+                        <Grid x:Name="SliderPanel" Margin="0">
                             <Border Background="{StaticResource SemitransparentGray}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,0,5,0" CornerRadius="3">
                                 <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>

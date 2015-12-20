@@ -27,6 +27,7 @@ namespace AntFu7.FreeDraw
         private static readonly Duration Duration3 = (Duration)Application.Current.Resources["Duration3"];
         private static readonly Duration Duration4 = (Duration)Application.Current.Resources["Duration4"];
         private static readonly Duration Duration5 = (Duration)Application.Current.Resources["Duration5"];
+        private static readonly Duration Duration10 = (Duration)Application.Current.Resources["Duration10"];
 
         private const string ButtonActived = "Actived";
         private const string ButtonUnactived = "";
@@ -68,6 +69,7 @@ namespace AntFu7.FreeDraw
             SetTopMost(true);
             DetailPanel.Opacity = 0;
             MainInkCanvas.Strokes.StrokesChanged += StrokesChanged;
+            //RightDocking();
         }
         private void Exit(object sender, EventArgs e)
         {
@@ -549,6 +551,72 @@ namespace AntFu7.FreeDraw
         private void EnableButton_Click(object sender, RoutedEventArgs e)
         {
             SetEnable(!_enable);
+        }
+        #endregion
+
+
+        #region  /---------Docking---------/
+
+        enum DockingDirection
+        {
+            None,
+            Top,
+            Left,
+            Right
+        }
+        private int _dockingEdgeThreshold = 30;
+        private int _dockingAwaitTime = 10000;
+        private int _dockingSideIndent = 290;
+        private void AnimatedCanvasMoving(UIElement ctr, Point to, Duration dur)
+        {
+            ctr.BeginAnimation(Canvas.TopProperty, new DoubleAnimation(Canvas.GetTop(ctr), to.Y, dur));
+            ctr.BeginAnimation(Canvas.LeftProperty, new DoubleAnimation(Canvas.GetLeft(ctr), to.X, dur));
+        }
+
+        private DockingDirection CheckDocking()
+        {
+            var left = Canvas.GetLeft(Palette);
+            var right = Canvas.GetRight(Palette);
+            var top = Canvas.GetTop(Palette);
+
+            if (left > 0 && left < _dockingEdgeThreshold)
+                return DockingDirection.Left;
+            if (right > 0 && right < _dockingEdgeThreshold)
+                return DockingDirection.Right;
+            if (top > 0 && top < _dockingEdgeThreshold)
+                return DockingDirection.Top;
+            return DockingDirection.None;
+        }
+
+        private void RightDocking()
+        {
+            AnimatedCanvasMoving(Palette, new Point(ActualWidth + _dockingSideIndent, Canvas.GetTop(Palette)), Duration5);
+        }
+        private void LeftDocking()
+        {
+            AnimatedCanvasMoving(Palette, new Point(0 - _dockingSideIndent, Canvas.GetTop(Palette)), Duration5);
+        }
+        private void TopDocking()
+        {
+
+        }
+
+        private async void AwaitDocking()
+        {
+
+            await Docking();
+        }
+
+        private Task Docking()
+        {
+            return Task.Run(() =>
+            {
+                Thread.Sleep(_dockingAwaitTime);
+                var direction = CheckDocking();
+                if (direction == DockingDirection.Left) LeftDocking();
+                if (direction == DockingDirection.Right) RightDocking();
+                if (direction == DockingDirection.Top) TopDocking();
+            });
         }
         #endregion
 

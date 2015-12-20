@@ -31,4 +31,4 @@ For now, FreeDraw can do:
 - Mouse penetration
 
 ## License WTFPL
-License can be found [here](LICENSE.md).
+License can be found [here](LICENSE.txt).

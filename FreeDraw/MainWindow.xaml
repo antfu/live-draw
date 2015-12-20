@@ -4,7 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:AntFu7.FreeDraw"
-    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="AntFu7.FreeDraw.MainWindow"
+    x:Class="AntFu7.FreeDraw.MainWindow"
     mc:Ignorable="d" ResizeMode="NoResize" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{StaticResource FakeTransparent}" AllowsTransparency="True" WindowStyle="None" Title="Free Draw Dev" Icon="Rescoures/icon.ico" >
     <Window.Resources>
         <SolidColorBrush x:Key="PaintingColor1" Color="#FF86E238"/>
@@ -19,7 +19,7 @@
         <SolidColorBrush x:Key="PaintingColor10" Color="#FFDF2828"/>
         <SolidColorBrush x:Key="PaintingColor11" Color="#FFE2386D"/>
         <SolidColorBrush x:Key="PaintingColor12" Color="#FF1E1E1E"/>
-      
+
     </Window.Resources>
     <Grid>
         <InkCanvas x:Name="MainInkCanvas" Background="{x:Null}" MoveEnabled="False" ResizeEnabled="False">
@@ -156,13 +156,13 @@
                             <Button x:Name="PinButton" ToolTip="Topmost" Click="PinButton_Click" >
                                 <Path Data="{DynamicResource IconPin}" Width="13"/>
                             </Button>
-                            <Button x:Name="SaveButton" Click="SaveButton_Click" ToolTip="Save ink to file / Right click to choose directory" PreviewMouseRightButtonDown="SaveButton_RightClick">
+                            <Button x:Name="SaveButton" Click="SaveButton_Click" ToolTip="Quick save / Right click to save to file" PreviewMouseRightButtonDown="SaveButton_RightClick">
                                 <Path Data="{DynamicResource IconSave}" Width="13"/>
                             </Button>
                             <Button x:Name="LoadButton" Click="LoadButton_Click" ToolTip="Load ink from file">
                                 <Path Data="{DynamicResource IconLoad}" Width="14"/>
                             </Button>
-                            <Button x:Name="ExportButton" ToolTip="Export as image (Unfinished)">
+                            <Button x:Name="ExportButton" ToolTip="Export ink to image with transparent / Right click to export to image with screen below" Click="ExportButton_Click" PreviewMouseRightButtonDown="ExportButton_RightClick">
                                 <Path Data="{DynamicResource IconExport}"/>
                             </Button>
                             <Button x:Name="HideButton"  ToolTip="Hide ink" Click="HideButton_Click" >

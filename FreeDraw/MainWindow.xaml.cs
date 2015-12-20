@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -11,7 +13,10 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Brush = System.Windows.Media.Brush;
+using Point = System.Windows.Point;
 
 namespace AntFu7.FreeDraw
 {
@@ -198,7 +203,7 @@ namespace AntFu7.FreeDraw
 
         #region /---------IO---------/
         private StrokeCollection _preLoadStrokes = null;
-        private void QuickSave(string filename = "")
+        private void QuickSave(string filename = "QuickSave_")
         {
             Save(new FileStream("Save\\" + filename + GenerateFileName(), FileMode.OpenOrCreate));
         }
@@ -206,9 +211,11 @@ namespace AntFu7.FreeDraw
         {
             try
             {
+                if (fs == Stream.Null) return;
                 MainInkCanvas.Strokes.Save(fs);
                 _saved = true;
                 Display("Ink saved");
+                fs.Close();
             }
             catch (Exception ex)
             {
@@ -229,9 +236,9 @@ namespace AntFu7.FreeDraw
             }
             return new StrokeCollection();
         }
-        private void AnimatedLoad(Stream fs)
+        private void AnimatedReload(StrokeCollection sc)
         {
-            _preLoadStrokes = Load(fs);
+            _preLoadStrokes = sc;
             var ani = new DoubleAnimation(0, Duration3);
             ani.Completed += LoadAniCompleted;
             MainInkCanvas.BeginAnimation(OpacityProperty, ani);
@@ -258,9 +265,9 @@ namespace AntFu7.FreeDraw
 
 
         #region /---------Generator---------/
-        private static string GenerateFileName()
+        private static string GenerateFileName(string fileExt = ".fdw")
         {
-            return DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".fdw";
+            return DateTime.Now.ToString("yyyyMMdd-HHmmss") + fileExt;
         }
         #endregion
 
@@ -289,6 +296,27 @@ namespace AntFu7.FreeDraw
             _staticInfo = info;
             if (!_displayingInfo)
                 InfoBox.Text = _staticInfo;
+        }
+
+        private static Stream SaveDialog(string initFileName, string fileExt = ".fdw", string filter = "Free Draw Save (*.fdw)|*fdw")
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                DefaultExt = fileExt,
+                Filter = filter,
+                FileName = initFileName,
+                InitialDirectory = Directory.GetCurrentDirectory() + "Save"
+            };
+            return dialog.ShowDialog() == true ? dialog.OpenFile() : Stream.Null;
+        }
+        private static Stream OpenDialog(string fileExt = ".fdw", string filter = "Free Draw Save (*.fdw)|*fdw")
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                DefaultExt = fileExt,
+                Filter = filter,
+            };
+            return dialog.ShowDialog() == true ? dialog.OpenFile() : Stream.Null;
         }
         #endregion
 
@@ -442,32 +470,71 @@ namespace AntFu7.FreeDraw
                 Display("Nothing to save");
                 return;
             }
-            var dialog = new Microsoft.Win32.SaveFileDialog()
-            {
-                DefaultExt = ".fdw",
-                Filter = "Free Draw Save (*.fdw)|*fdw",
-                FileName = GenerateFileName(),
-                InitialDirectory = Directory.GetCurrentDirectory() + "Save"
-            };
-            var r = dialog.ShowDialog();
-            if (r == true)
-            {
-                Save(dialog.OpenFile());
-            }
+            Save(SaveDialog(GenerateFileName()));
         }
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
             if (!PromptToSave()) return;
-            var dialog = new Microsoft.Win32.OpenFileDialog()
+            var s = OpenDialog();
+            if (s == Stream.Null) return;
+            AnimatedReload(Load(s));
+        }
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainInkCanvas.Strokes.Count == 0)
             {
-                DefaultExt = ".fdw",
-                Filter = "Free Draw Save (*.fdw)|*fdw",
-
-            };
-            var r = dialog.ShowDialog();
-            if (r == true)
+                Display("Nothing to save");
+                return;
+            }
+            try
             {
-                AnimatedLoad(dialog.OpenFile());
+                var s = SaveDialog("ImageExport_" + GenerateFileName(".png"), ".png",
+                    "Portable Network Graphics (*png)|*png");
+                if (s == Stream.Null) return;
+                var rtb = new RenderTargetBitmap((int)MainInkCanvas.ActualWidth, (int)MainInkCanvas.ActualHeight, 96d,
+                    96d, PixelFormats.Pbgra32);
+                rtb.Render(MainInkCanvas);
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                encoder.Save(s);
+                s.Close();
+                Display("Image Exported");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Display("Export failed");
+            }
+        }
+        private delegate void NoArgDelegate();
+        private void ExportButton_RightClick(object sender, MouseButtonEventArgs e)
+        {
+            if (MainInkCanvas.Strokes.Count == 0)
+            {
+                Display("Nothing to save");
+                return;
+            }
+            try
+            {
+                var s = SaveDialog("ImageExportWithBackground_" + GenerateFileName(".png"), ".png", "Portable Network Graphics (*png)|*png");
+                if (s == Stream.Null) return;
+                Palette.Opacity = 0;
+                Palette.Dispatcher.Invoke(DispatcherPriority.Render, (NoArgDelegate)delegate { });
+                Thread.Sleep(100);
+                var fromHwnd = Graphics.FromHwnd(IntPtr.Zero);
+                var w = (int)(SystemParameters.PrimaryScreenWidth * fromHwnd.DpiX / 96.0);
+                var h = (int)(SystemParameters.PrimaryScreenHeight * fromHwnd.DpiY / 96.0);
+                var image = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                Graphics.FromImage(image).CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(w, h), CopyPixelOperation.SourceCopy);
+                image.Save(s, ImageFormat.Png);
+                Palette.Opacity = 1;
+                s.Close();
+                Display("Image Exported");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Display("Export failed");
             }
         }
 
@@ -520,8 +587,8 @@ namespace AntFu7.FreeDraw
         { EndDrag(); }
         private void Palette_MouseLeave(object sender, MouseEventArgs e)
         { EndDrag(); }
-        #endregion
 
+        #endregion
 
     }
 }

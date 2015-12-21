@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ExtendControls.cs" />
     <Compile Include="StrokesHistoryNode.cs" />
     <Page Include="IconDataDictionary.xaml">
       <SubType>Designer</SubType>

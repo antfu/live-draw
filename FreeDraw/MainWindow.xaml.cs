@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,9 +30,6 @@ namespace AntFu7.FreeDraw
         private static readonly Duration Duration5 = (Duration)Application.Current.Resources["Duration5"];
         private static readonly Duration Duration10 = (Duration)Application.Current.Resources["Duration10"];
 
-        private const string ButtonActived = "Actived";
-        private const string ButtonUnactived = "";
-
         /*#region Mouse Throught
 
         private const int WsExTransparent = 0x20;
@@ -57,6 +55,7 @@ namespace AntFu7.FreeDraw
         #endregion*/
 
         #region /---------Lifetime---------/
+
         public MainWindow()
         {
             _history = new Stack<StrokesHistoryNode>();
@@ -64,28 +63,33 @@ namespace AntFu7.FreeDraw
             if (!Directory.Exists("Save"))
                 Directory.CreateDirectory("Save");
             InitializeComponent();
-            SetColor(DefaultColor);
+            SetColor(DefaultColorPicker);
             SetEnable(true);
             SetTopMost(true);
+            SetBrushSize(5);
             DetailPanel.Opacity = 0;
             MainInkCanvas.Strokes.StrokesChanged += StrokesChanged;
             //RightDocking();
         }
+
         private void Exit(object sender, EventArgs e)
         {
             if (IsUnsaved()) QuickSave("ExitingAutoSave_");
             Application.Current.Shutdown(0);
         }
+
         #endregion
 
 
         #region /---------Judge--------/
+
         private bool _saved;
 
         private bool IsUnsaved()
         {
             return MainInkCanvas.Strokes.Count != 0 && !_saved;
         }
+
         private bool PromptToSave()
         {
             if (!IsUnsaved())
@@ -101,61 +105,58 @@ namespace AntFu7.FreeDraw
                 return true;
             return false;
         }
+
         #endregion
 
 
         #region /---------Setter---------/
-        private Button _selectedColor;
+
+        private ColorPicker _selectedColor;
         private bool _inkVisibility = true;
         private bool _displayDetailPanel;
         private bool _eraserMode;
         private bool _enable;
+        private int[] _brushSizes = { 2, 5, 8, 13, 20 };
+        private int _brushIndex = 1;
 
         private void SetDetailPanel(bool v)
         {
             if (v)
             {
                 DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(180, Duration5));
-                ColorPickerController.BeginAnimation(WidthProperty, new DoubleAnimation(40, Duration3));
+                //DefaultColorPicker.Size = ColorPickerButtonSize.Middle;
                 DetailPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, Duration4));
-                PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(130, Duration3));
-                MinimizeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, Duration3));
-                MinimizeButton.BeginAnimation(HeightProperty, new DoubleAnimation(0, 25, Duration3));
+                //PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(130, Duration3));
+                //MinimizeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, Duration3));
+                //MinimizeButton.BeginAnimation(HeightProperty, new DoubleAnimation(0, 25, Duration3));
             }
             else
             {
                 DetailTogglerRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(0, Duration5));
-                ColorPickerController.BeginAnimation(WidthProperty, new DoubleAnimation(25, Duration3));
+                //DefaultColorPicker.Size = ColorPickerButtonSize.Small;
                 DetailPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, Duration4));
-                PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(80, Duration3));
-                MinimizeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, Duration3));
-                MinimizeButton.BeginAnimation(HeightProperty, new DoubleAnimation(25, 0, Duration3));
+                //PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation(80, Duration3));
+                //MinimizeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, Duration3));
+                //MinimizeButton.BeginAnimation(HeightProperty, new DoubleAnimation(25, 0, Duration3));
             }
             _displayDetailPanel = v;
         }
         private void SetInkVisibility(bool v)
         {
-            if (v)
-            {
-                MainInkCanvas.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, Duration3));
-                HideButton.Tag = ButtonUnactived;
-            }
-            else
-            {
-                MainInkCanvas.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, Duration3));
-                HideButton.Tag = ButtonActived;
-            }
+            MainInkCanvas.BeginAnimation(OpacityProperty,
+                v ? new DoubleAnimation(0, 1, Duration3) : new DoubleAnimation(1, 0, Duration3));
+            HideButton.IsActived = !v;
             SetEnable(v);
             _inkVisibility = v;
         }
         private void SetEnable(bool b)
         {
-            EnableButton.Tag = b ? ButtonUnactived : ButtonActived;
+            EnableButton.IsActived = !b;
             Background = Application.Current.Resources[b ? "FakeTransparent" : "TrueTransparent"] as Brush;
             _enable = b;
-            SetTopMost(false);
+            //SetTopMost(false);
         }
-        private void SetColor(Button b)
+        private void SetColor(ColorPicker b)
         {
             if (ReferenceEquals(_selectedColor, b)) return;
             var solidColorBrush = b.Background as SolidColorBrush;
@@ -165,39 +166,37 @@ namespace AntFu7.FreeDraw
 
             MainInkCanvas.DefaultDrawingAttributes.Color = solidColorBrush.Color;
             brushPreview.Background.BeginAnimation(SolidColorBrush.ColorProperty, ani);
-            b.Tag = ButtonActived;
+            b.IsActived = true;
             if (_selectedColor != null)
-                _selectedColor.Tag = ButtonUnactived;
+                _selectedColor.IsActived = false;
             _selectedColor = b;
         }
         private void SetBrushSize(double s)
         {
-            s = s * s;
             MainInkCanvas.DefaultDrawingAttributes.Height = s;
             MainInkCanvas.DefaultDrawingAttributes.Width = s;
-            brushPreview.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
-            brushPreview.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
+            brushPreview?.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
+            brushPreview?.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
         }
         private void SetEraserMode(bool v)
         {
             if (_eraserMode)
             {
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
-                EraserButton.Tag = ButtonActived;
                 SetStaticInfo("Eraser Mode");
             }
             else
             {
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
-                EraserButton.Tag = null;
                 SetStaticInfo("");
             }
+            EraserButton.IsActived = v;
             _eraserMode = v;
         }
 
         private void SetTopMost(bool v)
         {
-            PinButton.Tag = v ? ButtonActived : ButtonUnactived;
+            PinButton.IsActived = v;
             Topmost = v;
         }
         #endregion
@@ -426,16 +425,22 @@ namespace AntFu7.FreeDraw
 
         private void ColorPickers_Click(object sender, RoutedEventArgs e)
         {
-            var border = sender as Button;
+            var border = sender as ColorPicker;
             if (border == null) return;
             SetColor(border);
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            SetBrushSize(e.NewValue);
+            //SetBrushSize(e.NewValue);
         }
 
+        private void BrushSwitchButton_Click(object sender, RoutedEventArgs e)
+        {
+            _brushIndex++;
+            if (_brushIndex > _brushSizes.Count() - 1) _brushIndex = 0;
+            SetBrushSize(_brushSizes[_brushIndex]);
+        }
         private void UndoButton_Click(object sender, RoutedEventArgs e)
         {
             Undo();
@@ -552,6 +557,7 @@ namespace AntFu7.FreeDraw
         {
             SetEnable(!_enable);
         }
+
         #endregion
 
 
@@ -657,6 +663,7 @@ namespace AntFu7.FreeDraw
         { EndDrag(); }
 
         #endregion
+
 
     }
 }

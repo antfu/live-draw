@@ -1,4 +1,4 @@
-# FreeDraw
+# LiveDraw
 A tool allows you to draw/write/mark at any interfaces/windows.
 
 ## Interface
@@ -9,10 +9,10 @@ Old version
 
 ## Usage
 ### Installation
-FreeDraw has not had an executable(*exe) file for directly download yet. But you can clone this repository and build it by yourself.
+LiveDraw has not had an executable(*exe) file for directly download yet. But you can clone this repository and build it by yourself.
 
 ### Features
-For now, FreeDraw can do:
+For now, LiveDraw can do:
 - True transparent background (you can draw freely even when you are watching videos).
 - Select colors by simply clicks.
 - Adjust the size of brush.

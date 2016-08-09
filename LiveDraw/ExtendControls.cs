@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace AntFu7.FreeDraw
+namespace AntFu7.LiveDraw
 {
     class ActivableButton : Button
     {

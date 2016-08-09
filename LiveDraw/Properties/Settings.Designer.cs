@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AntFu7.FreeDraw.Properties {
+namespace AntFu7.LiveDraw.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

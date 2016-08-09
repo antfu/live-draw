@@ -19,7 +19,7 @@ using System.Windows.Threading;
 using Brush = System.Windows.Media.Brush;
 using Point = System.Windows.Point;
 
-namespace AntFu7.FreeDraw
+namespace AntFu7.LiveDraw
 {
     public partial class MainWindow : Window
     {
@@ -28,6 +28,7 @@ namespace AntFu7.FreeDraw
         private static readonly Duration Duration3 = (Duration)Application.Current.Resources["Duration3"];
         private static readonly Duration Duration4 = (Duration)Application.Current.Resources["Duration4"];
         private static readonly Duration Duration5 = (Duration)Application.Current.Resources["Duration5"];
+        private static readonly Duration Duration7 = (Duration)Application.Current.Resources["Duration7"];
         private static readonly Duration Duration10 = (Duration)Application.Current.Resources["Duration10"];
 
         /*#region Mouse Throught
@@ -116,8 +117,9 @@ namespace AntFu7.FreeDraw
         private bool _displayDetailPanel;
         private bool _eraserMode;
         private bool _enable;
-        private int[] _brushSizes = { 2, 5, 8, 13, 20 };
+        private readonly int[] _brushSizes = { 2, 5, 8, 13, 20 };
         private int _brushIndex = 1;
+        private bool _displayOrientation;
 
         private void SetDetailPanel(bool v)
         {
@@ -193,7 +195,16 @@ namespace AntFu7.FreeDraw
             EraserButton.IsActived = v;
             _eraserMode = v;
         }
-
+        private void SetOrientation(bool v)
+        {
+            PaletteRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(v ? -90:0, Duration4));
+            Palette.BeginAnimation(MinWidthProperty, new DoubleAnimation(v? 90:0, Duration7));
+            //PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeGrip" : "HorizontalModeGrip"], Duration3));
+            //BasicButtonPanel.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeFlowPanel" : "HorizontalModeFlowPanel"], Duration3));
+            //PaletteFlowPanel.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeFlowPanel" : "HorizontalModeFlowPanel"], Duration3));
+            //ColorPickersPanel.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeColorPickersPanel" : "HorizontalModeColorPickersPanel"], Duration3));
+            _displayOrientation = v;
+        }
         private void SetTopMost(bool v)
         {
             PinButton.IsActived = v;
@@ -557,7 +568,10 @@ namespace AntFu7.FreeDraw
         {
             SetEnable(!_enable);
         }
-
+        private void OrientationButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetOrientation(!_displayOrientation);
+        }
         #endregion
 
 
@@ -661,6 +675,7 @@ namespace AntFu7.FreeDraw
         { EndDrag(); }
         private void Palette_MouseLeave(object sender, MouseEventArgs e)
         { EndDrag(); }
+
 
         #endregion
 

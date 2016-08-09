@@ -1,6 +1,6 @@
 ﻿using System.Windows.Ink;
 
-namespace AntFu7.FreeDraw
+namespace AntFu7.LiveDraw
 {
     public enum StrokesHistoryNodeType
     {

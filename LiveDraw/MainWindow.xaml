@@ -42,7 +42,7 @@
                     <RotateTransform x:Name="PaletteRotate" CenterX="265" CenterY="100" Angle="0"/>
                 </Grid.RenderTransform>
                 <Grid.Effect>
-                    <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="2" Opacity="0.3"/>
                 </Grid.Effect>
                 <Grid>
                     <Grid.Resources>
@@ -110,7 +110,7 @@
                         <Grid x:Name="BasicButtonPanel" Width="{StaticResource HorizontalModeColorPickersPanel}" Margin="0">
                             <WrapPanel VerticalAlignment="Top" Margin="0,0,10,0" Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Border x:Name="PaletteGrip" Width="150" Cursor="SizeAll" Height="25" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0" Padding="3" >
-                                    <Border CornerRadius="5" Background="#26FFFFFF">
+                                    <Border CornerRadius="5" Background="#338A8A8A">
                                         <TextBlock x:Name="InfoBox" Foreground="White" FontSize="10" FontFamily="Consolas" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                 </Border>

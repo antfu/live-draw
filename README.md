@@ -1,5 +1,13 @@
 # LiveDraw
-A tool allows you to draw/write/mark at any interfaces/windows.
+A tool allows you to draw on screen without freezing your it.
+
+## Why?
+When you need to draw or mark something with presentation, you may use some tools like
+[Windows Ink Workspace](https://blogs.windows.com/windowsexperience/2016/10/10/windows-10-tip-getting-started-with-the-windows-ink-workspace/),
+but all of them are actually **taking a screenshot** and allowing you to draw on it.
+That's actually annoying when you want to presentation something dynamic.
+
+However, **LiveDraw is here and built for it!**
 
 ## Interface
 ![](screenshots/00.png)
@@ -11,7 +19,6 @@ A tool allows you to draw/write/mark at any interfaces/windows.
 [Release](https://github.com/antfu/live-draw/releases)
 
 ### Features
-For now, LiveDraw can do:
 - True transparent background (you can draw freely even when you are watching videos).
 - Select colors by simply clicks.
 - Adjust the size of brush.

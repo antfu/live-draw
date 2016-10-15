@@ -2,14 +2,13 @@
 A tool allows you to draw/write/mark at any interfaces/windows.
 
 ## Interface
-![](http://i4.tietuku.com/d2b1349fbf8164af.png)
+![](screenshots/00.png)
 
-Old version
-![](http://i4.tietuku.com/5b36ba9277856166.png)
+![](screenshots/01.png)
 
 ## Usage
-### Installation
-LiveDraw has not had an executable(*exe) file for directly download yet. But you can clone this repository and build it by yourself.
+### Downloads
+[Release](https://github.com/antfu/live-draw/releases)
 
 ### Features
 For now, LiveDraw can do:
@@ -30,5 +29,5 @@ For now, LiveDraw can do:
 - Export as image files
 - Mouse penetration
 
-## License WTFPL
-License can be found [here](LICENSE.txt).
+## License
+MIT

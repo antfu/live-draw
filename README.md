@@ -1,5 +1,5 @@
 # LiveDraw
-A tool allows you to draw on screen without freezing your it.
+A tool allows you to draw on screen real-time.
 
 ## Why?
 When you need to draw or mark something with presentation, you may use some tools like

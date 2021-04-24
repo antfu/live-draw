@@ -36,5 +36,8 @@ However, **LiveDraw is here and built for it!**
 - Export as image files
 - Mouse penetration
 
+## Publish
+- dotnet publish -r win-x86 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
+
 ## License
 MIT

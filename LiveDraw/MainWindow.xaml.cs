@@ -23,6 +23,7 @@ namespace AntFu7.LiveDraw
 {
     public partial class MainWindow : Window
     {
+        private static Mutex mutex = new Mutex(true, "LiveDraw");
         private static readonly Duration Duration1 = (Duration)Application.Current.Resources["Duration1"];
         private static readonly Duration Duration2 = (Duration)Application.Current.Resources["Duration2"];
         private static readonly Duration Duration3 = (Duration)Application.Current.Resources["Duration3"];
@@ -59,23 +60,36 @@ namespace AntFu7.LiveDraw
 
         public MainWindow()
         {
-            _history = new Stack<StrokesHistoryNode>();
-            _redoHistory = new Stack<StrokesHistoryNode>();
-            if (!Directory.Exists("Save"))
-                Directory.CreateDirectory("Save");
-            InitializeComponent();
-            SetColor(DefaultColorPicker);
-            SetEnable(true);
-            SetTopMost(true);
-            SetBrushSize(5);
-            DetailPanel.Opacity = 0;
-            MainInkCanvas.Strokes.StrokesChanged += StrokesChanged;
-            //RightDocking();
+           
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+            {
+                _history = new Stack<StrokesHistoryNode>();
+                _redoHistory = new Stack<StrokesHistoryNode>();
+                if (!Directory.Exists("Save"))
+                    Directory.CreateDirectory("Save");
+
+                InitializeComponent();
+                SetColor(DefaultColorPicker);
+                SetEnable(false);
+                SetTopMost(true);
+                SetDetailPanel(true);
+                SetBrushSize(5);
+                DetailPanel.Opacity = 0;
+                MainInkCanvas.Strokes.StrokesChanged += StrokesChanged;
+                //RightDocking();
+
+            }
+            else
+            {
+                Application.Current.Shutdown(0);
+            }
         }
 
         private void Exit(object sender, EventArgs e)
         {
-            if (IsUnsaved()) QuickSave("ExitingAutoSave_");
+            if (IsUnsaved())
+                QuickSave("ExitingAutoSave_");
+            
             Application.Current.Shutdown(0);
         }
 
@@ -407,7 +421,6 @@ namespace AntFu7.LiveDraw
 
         private void AnimatedClear()
         {
-            if (!PromptToSave()) return;
             var ani = new DoubleAnimation(0, Duration3);
             ani.Completed += ClearAniComplete; ;
             MainInkCanvas.BeginAnimation(OpacityProperty, ani);
@@ -644,15 +657,22 @@ namespace AntFu7.LiveDraw
         #region /---------Dragging---------/
         private Point _lastMousePosition;
         private bool _isDraging;
+        private bool _tempEnable;
 
         private void StartDrag()
         {
             _lastMousePosition = Mouse.GetPosition(this);
             _isDraging = true;
             Palette.Background = new SolidColorBrush(Colors.Transparent);
+            _tempEnable = _enable;
+            SetEnable(true);
         }
         private void EndDrag()
         {
+            if (_isDraging == true)
+            {
+                SetEnable(_tempEnable);
+            }
             _isDraging = false;
             Palette.Background = null;
         }
@@ -672,9 +692,13 @@ namespace AntFu7.LiveDraw
             _lastMousePosition = currentMousePosition;
         }
         private void Palette_MouseUp(object sender, MouseButtonEventArgs e)
-        { EndDrag(); }
+        { 
+            EndDrag();
+        }
         private void Palette_MouseLeave(object sender, MouseEventArgs e)
-        { EndDrag(); }
+        {
+            EndDrag();
+        }
 
 
         #endregion

@@ -227,7 +227,7 @@
                                         <Setter Property="Height" Value="32"/>
                                     </Style>
                                 </WrapPanel.Resources>
-                                <local:ActivableButton x:Name="BrushSwitchButton" Click="BrushSwitchButton_Click">
+                                <local:ActivableButton x:Name="BrushSwitchButton" Click="BrushSwitchButton_Click" ToolTip="Preview">
                                     <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </local:ActivableButton>
                                 <local:ActivableButton x:Name="UndoButton" Click="UndoButton_Click" ToolTip="Undo">
@@ -294,7 +294,7 @@
                                     </local:ActivableButton.RenderTransform>
                                     <Path Data="{DynamicResource IconNoAccess}" />
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="OrientationButton" Click="OrientationButton_Click">
+                                <local:ActivableButton x:Name="OrientationButton" Click="OrientationButton_Click" ToolTip="Rotate dock">
                                     <Path Data="{DynamicResource IconMinimize}" RenderTransformOrigin="0.5,0.5">
                                         <Path.RenderTransform>
                                             <RotateTransform Angle="90"/>

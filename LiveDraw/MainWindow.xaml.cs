@@ -196,6 +196,9 @@ namespace AntFu7.LiveDraw
         }
         private void SetEraserMode(bool v)
         {
+            EraserButton.IsActived = v;
+            _eraserMode = v;
+
             if (_eraserMode)
             {
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
@@ -206,8 +209,6 @@ namespace AntFu7.LiveDraw
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 SetStaticInfo("");
             }
-            EraserButton.IsActived = v;
-            _eraserMode = v;
         }
         private void SetOrientation(bool v)
         {

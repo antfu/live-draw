@@ -37,7 +37,8 @@ However, **LiveDraw is here and built for it!**
 - Mouse penetration
 
 ## Publish
-- dotnet publish -r win-x86 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
+- dotnet publish -c Release -r win-x86 -p:PublishSingleFile=true
+- dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true
 
 ## License
 MIT

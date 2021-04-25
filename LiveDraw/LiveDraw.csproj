@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PublishReadyToRun>true</PublishReadyToRun>
     <OutputType>WinExe</OutputType>
     <RootNamespace>AntFu7.LiveDraw</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

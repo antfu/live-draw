@@ -171,6 +171,16 @@ namespace AntFu7.LiveDraw
             Background = Application.Current.Resources[b ? "FakeTransparent" : "TrueTransparent"] as Brush;
             _enable = b;
             //SetTopMost(false);
+            if (_enable)
+            {                   
+                Display("LiveDraw");
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            }
+            else
+            {
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.None; //No inking possible
+                Display("Locked");
+            }
         }
         private void SetColor(ColorPicker b)
         {
@@ -206,8 +216,8 @@ namespace AntFu7.LiveDraw
             }
             else
             {
-                MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
-                SetStaticInfo("");
+                SetStaticInfo("Pen Mode");
+                SetEnable(_enable);
             }
         }
         private void SetOrientation(bool v)
@@ -480,7 +490,7 @@ namespace AntFu7.LiveDraw
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            AnimatedClear();
+            AnimatedClear(); //Warning! to missclick erasermode (confirmation click?)
         }
         private void PinButton_Click(object sender, RoutedEventArgs e)
         {

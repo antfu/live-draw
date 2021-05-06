@@ -712,8 +712,30 @@ namespace AntFu7.LiveDraw
         }
 
 
+
+
         #endregion
 
-
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Z:
+                    Undo();
+                    break;
+                case Key.Y:
+                    Redo();
+                    break;
+                case Key.E:
+                    SetEraserMode(!_eraserMode);
+                    break;
+                case Key.B:
+                    if (_eraserMode == true)
+                        SetEraserMode(false);
+                    else
+                        SetEnable(!_enable);
+                    break;
+            }
+        }
     }
 }

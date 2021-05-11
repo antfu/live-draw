@@ -230,13 +230,13 @@
                                 <local:ActivableButton x:Name="BrushSwitchButton" Click="BrushSwitchButton_Click" ToolTip="Preview">
                                     <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="UndoButton" Click="UndoButton_Click" ToolTip="Undo">
+                                <local:ActivableButton x:Name="UndoButton" Click="UndoButton_Click" ToolTip="Undo (Z)">
                                     <local:ActivableButton.RenderTransform>
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>
                                     </local:ActivableButton.RenderTransform>
                                     <Path Data="{DynamicResource IconUndo}"/>
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="RedoButton" ToolTip="Redo" Click="RedoButton_Click">
+                                <local:ActivableButton x:Name="RedoButton" ToolTip="Redo (Y)" Click="RedoButton_Click">
                                     <local:ActivableButton.RenderTransform >
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>
                                     </local:ActivableButton.RenderTransform>
@@ -246,7 +246,7 @@
                                         </Path.RenderTransform>
                                     </Path>
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Toggle eraser mode">
+                                <local:ActivableButton x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Toggle eraser mode (E)">
                                     <local:ActivableButton.RenderTransform >
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>
                                     </local:ActivableButton.RenderTransform>

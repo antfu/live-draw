@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveDraw", "LiveDraw\LiveDraw.csproj", "{5CAA7FE4-8BFB-4054-A932-46638196DC50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveDraw", "LiveDraw\LiveDraw.csproj", "{5CAA7FE4-8BFB-4054-A932-46638196DC50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {54108D56-B324-41E9-A48B-A057CC171F92}
 	EndGlobalSection
 EndGlobal

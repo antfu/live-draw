@@ -1,6 +1,6 @@
 ﻿namespace AntFu7.LiveDraw.Properties {
-
-
+    
+    
     // This class allows you to handle specific events in the parameter class:
     //  The SettingChanging event is triggered before a parameter value is changed.
     //  The PropertyChanged event is raised after changing a parameter value.
@@ -16,11 +16,11 @@
             // this.SettingsSaving += this.SettingsSavingEventHandler;
             //
         }
-
+        
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
             // Add code to handle the SettingChangingEvent event here.
         }
-
+        
         private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e) {
             // Add code to handle the SettingsSaving event here.
         }

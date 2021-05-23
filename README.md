@@ -14,6 +14,7 @@ However, **LiveDraw is here and built for it!**
 
 ![](screenshots/01.png)
 
+![](screenshots/02.png)
 ## Usage
 ### Downloads
 [Release](https://github.com/antfu/live-draw/releases)
@@ -35,6 +36,10 @@ However, **LiveDraw is here and built for it!**
 - Edge docking
 - Export as image files
 - Mouse penetration
+
+## Publish
+- dotnet publish -c Release -r win-x86 -p:PublishSingleFile=true
+- dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true
 
 ## License
 MIT

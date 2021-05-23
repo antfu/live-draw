@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:AntFu7.LiveDraw"
     x:Class="AntFu7.LiveDraw.MainWindow"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    mc:Ignorable="d" ResizeMode="NoResize" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{StaticResource FakeTransparent}" AllowsTransparency="True" WindowStyle="None" Title="Free Draw Dev" Icon="Rescoures/icon.ico" >
+    mc:Ignorable="d" ResizeMode="NoResize" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{StaticResource FakeTransparent}" AllowsTransparency="True" WindowStyle="None" Title="LiveDraw Dev" Icon="Rescoures/icon.ico" KeyDown="Window_KeyDown" >
     <Window.Resources>
         <SolidColorBrush x:Key="PaintingColor1" Color="#FF86E238"/>
         <SolidColorBrush x:Key="PaintingColor2" Color="#FF38E2A8"/>
@@ -31,7 +31,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <InkCanvas x:Name="MainInkCanvas" Background="{x:Null}" MoveEnabled="False" ResizeEnabled="False" Cursor="Pen" Margin="0,0,0,-0.333">
+        <InkCanvas x:Name="MainInkCanvas" Background="{x:Null}" MoveEnabled="False" ResizeEnabled="False" Cursor="Pen" Margin="0,0,0,-0.333" EditingModeInverted="EraseByPoint">
             <InkCanvas.DefaultDrawingAttributes>
                 <DrawingAttributes Color="#FFFF5656" FitToCurve="True" Height="5" IgnorePressure="False" IsHighlighter="False" StylusTip="Ellipse" StylusTipTransform="Identity" Width="5"/>
             </InkCanvas.DefaultDrawingAttributes>
@@ -227,16 +227,16 @@
                                         <Setter Property="Height" Value="32"/>
                                     </Style>
                                 </WrapPanel.Resources>
-                                <local:ActivableButton x:Name="BrushSwitchButton" Click="BrushSwitchButton_Click">
+                                <local:ActivableButton x:Name="BrushSwitchButton" Click="BrushSwitchButton_Click" ToolTip="Preview">
                                     <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="UndoButton" Click="UndoButton_Click" ToolTip="Undo">
+                                <local:ActivableButton x:Name="UndoButton" Click="UndoButton_Click" ToolTip="Undo (Z)">
                                     <local:ActivableButton.RenderTransform>
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>
                                     </local:ActivableButton.RenderTransform>
                                     <Path Data="{DynamicResource IconUndo}"/>
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="RedoButton" ToolTip="Redo" Click="RedoButton_Click">
+                                <local:ActivableButton x:Name="RedoButton" ToolTip="Redo (Y)" Click="RedoButton_Click">
                                     <local:ActivableButton.RenderTransform >
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>
                                     </local:ActivableButton.RenderTransform>
@@ -246,7 +246,7 @@
                                         </Path.RenderTransform>
                                     </Path>
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Toggle eraser mode">
+                                <local:ActivableButton x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Toggle eraser mode (E)">
                                     <local:ActivableButton.RenderTransform >
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>
                                     </local:ActivableButton.RenderTransform>
@@ -294,7 +294,7 @@
                                     </local:ActivableButton.RenderTransform>
                                     <Path Data="{DynamicResource IconNoAccess}" />
                                 </local:ActivableButton>
-                                <local:ActivableButton x:Name="OrientationButton" Click="OrientationButton_Click">
+                                <local:ActivableButton x:Name="OrientationButton" Click="OrientationButton_Click" ToolTip="Rotate dock">
                                     <Path Data="{DynamicResource IconMinimize}" RenderTransformOrigin="0.5,0.5">
                                         <Path.RenderTransform>
                                             <RotateTransform Angle="90"/>

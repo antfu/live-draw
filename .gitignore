@@ -24,6 +24,7 @@ bld/
 
 # Visual Studio 2015 cache/options directory
 .vs/
+.vscode/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -210,3 +211,4 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/LiveDraw/Properties/PublishProfiles

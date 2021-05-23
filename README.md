@@ -14,6 +14,7 @@ However, **LiveDraw is here and built for it!**
 
 ![](screenshots/01.png)
 
+![](screenshots/02.png)
 ## Usage
 ### Downloads
 [Release](https://github.com/antfu/live-draw/releases)

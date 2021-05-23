@@ -73,9 +73,14 @@ namespace AntFu7.LiveDraw
                 SetEnable(false);
                 SetTopMost(true);
                 SetDetailPanel(true);
-                SetBrushSize(5);
+                SetBrushSize(_brushSizes[_brushIndex]);
                 DetailPanel.Opacity = 0;
+
                 MainInkCanvas.Strokes.StrokesChanged += StrokesChanged;
+                MainInkCanvas.MouseLeftButtonDown += StartLine;
+                MainInkCanvas.MouseLeftButtonUp += EndLine;
+                MainInkCanvas.MouseMove += MakeLine;
+                MainInkCanvas.MouseWheel += BrushSize;
                 //RightDocking();
 
             }
@@ -170,16 +175,18 @@ namespace AntFu7.LiveDraw
             EnableButton.IsActived = !b;
             Background = Application.Current.Resources[b ? "FakeTransparent" : "TrueTransparent"] as Brush;
             _enable = b;
+            MainInkCanvas.UseCustomCursor = false;
+
             //SetTopMost(false);
-            if (_enable)
-            {                   
-                Display("LiveDraw");
+            if (_enable == true)
+            {
+                SetStaticInfo("LiveDraw");
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
             }
             else
             {
+                SetStaticInfo("Locked");
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.None; //No inking possible
-                Display("Locked");
             }
         }
         private void SetColor(ColorPicker b)
@@ -208,6 +215,7 @@ namespace AntFu7.LiveDraw
         {
             EraserButton.IsActived = v;
             _eraserMode = v;
+            MainInkCanvas.UseCustomCursor = false;
 
             if (_eraserMode)
             {
@@ -216,7 +224,6 @@ namespace AntFu7.LiveDraw
             }
             else
             {
-                SetStaticInfo("Pen Mode");
                 SetEnable(_enable);
             }
         }
@@ -470,6 +477,22 @@ namespace AntFu7.LiveDraw
             //SetBrushSize(e.NewValue);
         }
 
+        private void BrushSize(object sender, MouseWheelEventArgs e)
+        {
+            int delta = e.Delta;
+            if (delta < 0)
+                _brushIndex--;
+            else
+                _brushIndex++;
+
+            if (_brushIndex > _brushSizes.Count() - 1)
+                _brushIndex = 0;
+            else if (_brushIndex < 0)
+                _brushIndex = _brushSizes.Count() - 1;
+
+            SetBrushSize(_brushSizes[_brushIndex]);
+        }
+
         private void BrushSwitchButton_Click(object sender, RoutedEventArgs e)
         {
             _brushIndex++;
@@ -710,12 +733,9 @@ namespace AntFu7.LiveDraw
         {
             EndDrag();
         }
-
-
-
-
         #endregion
 
+        #region /--------- Shortcuts --------/
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -732,10 +752,104 @@ namespace AntFu7.LiveDraw
                 case Key.B:
                     if (_eraserMode == true)
                         SetEraserMode(false);
-                    else
-                        SetEnable(!_enable);
+                    SetEnable(true);
+                    break;
+                case Key.L:
+                    if (_eraserMode == true)
+                        SetEraserMode(false);
+                    LineMode(true);
+                    break;
+                case Key.D:
+                    MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                    break;
+                case Key.R:
+                    SetEnable(!_enable);
+                    break;
+                case Key.Add:
+                    _brushIndex++;
+                    if (_brushIndex > _brushSizes.Count() - 1)
+                        _brushIndex = 0;
+                    SetBrushSize(_brushSizes[_brushIndex]);
+                    break;
+                case Key.Subtract:
+                    _brushIndex--;
+                    if (_brushIndex < 0)
+                        _brushIndex = _brushSizes.Count() - 1;
+                    SetBrushSize(_brushSizes[_brushIndex]);
                     break;
             }
         }
+        #endregion
+
+        #region /------ Line Mode -------/
+        private bool _isMoving = false;
+        private bool _lineMode = false;
+        private Point _startPoint;
+        private Stroke _lastStroke;
+      
+        private void LineMode(bool l)
+        {
+            _lineMode = l;
+            if (_lineMode)
+            {
+                SetStaticInfo("LineMode");
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.None;
+                MainInkCanvas.UseCustomCursor = true;
+            }
+            else
+                SetEnable(true);
+        }
+        private void StartLine(object sender, MouseButtonEventArgs e)
+        {
+            _isMoving = true;
+            _startPoint = e.GetPosition(MainInkCanvas);
+            _lastStroke = null;
+            _ignoreStrokesChange = true;
+        }
+        private void EndLine(object sender, MouseButtonEventArgs e)
+        {
+            if (_isMoving == true)
+            {
+                Point endPoint = e.GetPosition(MainInkCanvas);
+                if (_lastStroke != null)
+                {
+                    StrokeCollection collection = new StrokeCollection();
+                    collection.Add(_lastStroke);
+                    Push(_history, new StrokesHistoryNode(collection, StrokesHistoryNodeType.Added));
+                }
+
+            }
+            _isMoving = false;
+            _ignoreStrokesChange = false;
+        }
+        private void MakeLine(object sender, MouseEventArgs e)
+        {
+            if (_isMoving == false)
+                return;
+
+            DrawingAttributes newLine = MainInkCanvas.DefaultDrawingAttributes.Clone();
+            Stroke stroke = null;
+            newLine.StylusTip = StylusTip.Ellipse;
+            newLine.IgnorePressure = true;
+
+            Point _endPoint = e.GetPosition(MainInkCanvas);
+
+            List<Point> pList = new List<Point>
+            {
+                new Point(_startPoint.X, _startPoint.Y),
+                new Point(_endPoint.X, _endPoint.Y),
+            };
+
+            StylusPointCollection point = new StylusPointCollection(pList);
+            stroke = new Stroke(point) { DrawingAttributes = newLine, };
+
+            if (_lastStroke != null)
+                MainInkCanvas.Strokes.Remove(_lastStroke);
+            if (stroke != null)
+                MainInkCanvas.Strokes.Add(stroke);
+
+            _lastStroke = stroke;
+        }
+        #endregion
     }
 }

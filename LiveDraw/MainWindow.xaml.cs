@@ -180,6 +180,7 @@ namespace AntFu7.LiveDraw
             //SetTopMost(false);
             if (_enable == true)
             {
+                LineButton.IsActived = false;
                 SetStaticInfo("LiveDraw");
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
             }
@@ -210,6 +211,7 @@ namespace AntFu7.LiveDraw
             MainInkCanvas.DefaultDrawingAttributes.Width = s;
             brushPreview?.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
             brushPreview?.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
+            MainInkCanvas.EraserShape = new EllipseStylusShape(s,s);
         }
         private void SetEraserMode(bool v)
         {
@@ -498,6 +500,10 @@ namespace AntFu7.LiveDraw
             _brushIndex++;
             if (_brushIndex > _brushSizes.Count() - 1) _brushIndex = 0;
             SetBrushSize(_brushSizes[_brushIndex]);
+        }
+        private void LineButton_Click(object sender, RoutedEventArgs e)
+        {
+            LineMode(!_lineMode);
         }
         private void UndoButton_Click(object sender, RoutedEventArgs e)
         {
@@ -789,6 +795,7 @@ namespace AntFu7.LiveDraw
       
         private void LineMode(bool l)
         {
+            LineButton.IsActived = l;
             _lineMode = l;
             if (_lineMode)
             {

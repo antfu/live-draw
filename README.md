@@ -15,7 +15,15 @@ However, **LiveDraw is here and built for it!**
 ![](screenshots/01.png)
 
 ![](screenshots/02.png)
+
 ## Usage
+The shortcuts that can be used:
+- [ Z ]  Undo, [ Y ]  Redo,
+- [ E ]  Eraser By Stroke, [ D ]  Eraser By Point,
+- [ R ]  Release or Recover interface,
+- [ + ]  Increase size brush, [ - ]  Decrease size brush
+- [ B ]  Brush mode, [ L ]  Line Mode
+
 ### Downloads
 [Release](https://github.com/antfu/live-draw/releases)
 

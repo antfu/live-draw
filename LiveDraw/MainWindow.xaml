@@ -230,6 +230,13 @@
                                 <local:ActivableButton x:Name="BrushSwitchButton" Click="BrushSwitchButton_Click" ToolTip="Preview">
                                     <Border x:Name="brushPreview" Width="5" Height="5" Background="#FFD6D6D6" CornerRadius="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </local:ActivableButton>
+                                <local:ActivableButton x:Name="LineButton" ToolTip="Line Mode" Click="LineButton_Click">
+                                    <Path Data="{DynamicResource IconMinimize}" RenderTransformOrigin="0.5,0.5" Height="3" Stretch="Fill" Width="15">
+                                        <Path.RenderTransform>
+                                            <RotateTransform Angle="-45"/>                                       
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </local:ActivableButton>
                                 <local:ActivableButton x:Name="UndoButton" Click="UndoButton_Click" ToolTip="Undo (Z)">
                                     <local:ActivableButton.RenderTransform>
                                         <RotateTransform CenterX="16" CenterY="16" Angle="{Binding MinWidth, ElementName=Palette}"/>

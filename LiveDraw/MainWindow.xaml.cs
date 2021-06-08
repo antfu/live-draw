@@ -373,6 +373,29 @@ namespace AntFu7.LiveDraw
             };
             return dialog.ShowDialog() == true ? dialog.OpenFile() : Stream.Null;
         }
+
+        void EraserFunction()
+        {
+            if (EraseByPoint_Flag == (int)erase_mode.NONE)
+            {
+                SetEraserMode(!_eraserMode);
+                EraserButton.ToolTip = "Toggle eraser (by point) mode (D)";
+                EraseByPoint_Flag = (int)erase_mode.ERASER;
+            }
+            else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
+            {
+                SetStaticInfo("Eraser Mode (Point)");
+                EraserButton.ToolTip = "Toggle eraser - OFF";
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
+            }
+            else if (EraseByPoint_Flag == (int)erase_mode.ERASERBYPOINT)
+            {
+                SetEraserMode(!_eraserMode);
+                EraserButton.ToolTip = "Toggle eraser mode (E)";
+                EraseByPoint_Flag = (int)erase_mode.NONE;
+            }
+        }
         #endregion
 
 
@@ -532,25 +555,7 @@ namespace AntFu7.LiveDraw
         {
             if(_enable)
             {
-                if (EraseByPoint_Flag == (int)erase_mode.NONE)
-                {
-                    SetEraserMode(!_eraserMode);
-                    EraserButton.ToolTip = "Toggle eraser (by point) mode (D)";
-                    EraseByPoint_Flag = (int)erase_mode.ERASER;
-                }
-                else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
-                {
-                    SetStaticInfo("Eraser Mode (Point)");
-                    EraserButton.ToolTip = "Toggle eraser - OFF";
-                    MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                    EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
-                }
-                else
-                {
-                    SetEraserMode(!_eraserMode);
-                    EraserButton.ToolTip = "Toggle eraser mode (E)";
-                    EraseByPoint_Flag = (int)erase_mode.NONE;
-                }
+                EraserFunction();                
             }
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -786,46 +791,63 @@ namespace AntFu7.LiveDraw
         #region /--------- Shortcuts --------/
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            if(e.Key == Key.R)
             {
-                case Key.Z:
-                    Undo();
-                    break;
-                case Key.Y:
-                    Redo();
-                    break;
-                case Key.E:
-                    SetEraserMode(!_eraserMode);
-                    break;
-                case Key.B:
-                    if (_eraserMode == true)
-                        SetEraserMode(false);
-                    SetEnable(true);
-                    break;
-                case Key.L:
-                    if (_eraserMode == true)
-                        SetEraserMode(false);
-                    LineMode(true);
-                    break;
-                case Key.D:
-                    MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                    break;
-                case Key.R:
-                    SetEnable(!_enable);
-                    break;
-                case Key.Add:
-                    _brushIndex++;
-                    if (_brushIndex > _brushSizes.Count() - 1)
-                        _brushIndex = 0;
-                    SetBrushSize(_brushSizes[_brushIndex]);
-                    break;
-                case Key.Subtract:
-                    _brushIndex--;
-                    if (_brushIndex < 0)
-                        _brushIndex = _brushSizes.Count() - 1;
-                    SetBrushSize(_brushSizes[_brushIndex]);
-                    break;
+                SetEnable(!_enable);
             }
+            if (_enable)
+            {
+                switch (e.Key)
+                {
+                    case Key.Z:
+                        Undo();
+                        break;
+                    case Key.Y:
+                        Redo();
+                        break;
+                    case Key.E:
+                        EraserFunction();
+                        break;
+                    case Key.B:
+                        if (_eraserMode == true)
+                            SetEraserMode(false);
+                        SetEnable(true);
+                        break;
+                    case Key.L:
+                        if (_eraserMode == true)
+                            SetEraserMode(false);
+                        LineMode(true);
+                        break;
+
+                    /*
+                    case Key.D:
+                        if (EraseByPoint_Flag is ((int)erase_mode.NONE) or ((int)erase_mode.ERASER))
+                        {
+                            SetStaticInfo("Eraser Mode (Point)");
+                            MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                            EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
+                        }
+                        else if (EraseByPoint_Flag == (int)erase_mode.ERASERBYPOINT)
+                        {
+                            MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                            EraseByPoint_Flag = (int)erase_mode.NONE;
+                        }
+                        break;
+                    */
+                    case Key.Add:
+                        _brushIndex++;
+                        if (_brushIndex > _brushSizes.Count() - 1)
+                            _brushIndex = 0;
+                        SetBrushSize(_brushSizes[_brushIndex]);
+                        break;
+                    case Key.Subtract:
+                        _brushIndex--;
+                        if (_brushIndex < 0)
+                            _brushIndex = _brushSizes.Count() - 1;
+                        SetBrushSize(_brushSizes[_brushIndex]);
+                        break;
+                }
+            }            
         }
         #endregion
 

@@ -21,8 +21,17 @@ using Point = System.Windows.Point;
 
 namespace AntFu7.LiveDraw
 {
+    
+
     public partial class MainWindow : Window
     {
+        public static int EraseByPoint_Flag = 0;
+        public enum erase_mode
+        {
+            NONE = 0,
+            ERASER = 1,
+            ERASERBYPOINT = 2            
+        }
         private static Mutex mutex = new Mutex(true, "LiveDraw");
         private static readonly Duration Duration1 = (Duration)Application.Current.Resources["Duration1"];
         private static readonly Duration Duration2 = (Duration)Application.Current.Resources["Duration2"];
@@ -515,7 +524,21 @@ namespace AntFu7.LiveDraw
         }
         private void EraserButton_Click(object sender, RoutedEventArgs e)
         {
-            SetEraserMode(!_eraserMode);
+            if (EraseByPoint_Flag == (int)erase_mode.NONE)
+            {
+                SetEraserMode(!_eraserMode);
+                EraseByPoint_Flag = (int)erase_mode.ERASER;
+            }
+            else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
+            {
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
+            }
+            else
+            {
+                SetEraserMode(!_eraserMode);
+                EraseByPoint_Flag = (int)erase_mode.NONE;
+            }
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {

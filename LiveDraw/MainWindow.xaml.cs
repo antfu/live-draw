@@ -530,24 +530,27 @@ namespace AntFu7.LiveDraw
         }
         private void EraserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (EraseByPoint_Flag == (int)erase_mode.NONE)
+            if(_enable)
             {
-                SetEraserMode(!_eraserMode);
-                EraserButton.ToolTip = "Toggle eraser (by point) mode (D)";
-                EraseByPoint_Flag = (int)erase_mode.ERASER;
-            }
-            else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
-            {
-                SetStaticInfo("Eraser Mode (Point)");
-                EraserButton.ToolTip = "Toggle eraser - OFF";
-                MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
-            }
-            else
-            {
-                SetEraserMode(!_eraserMode);
-                EraserButton.ToolTip = "Toggle eraser mode (E)";
-                EraseByPoint_Flag = (int)erase_mode.NONE;
+                if (EraseByPoint_Flag == (int)erase_mode.NONE)
+                {
+                    SetEraserMode(!_eraserMode);
+                    EraserButton.ToolTip = "Toggle eraser (by point) mode (D)";
+                    EraseByPoint_Flag = (int)erase_mode.ERASER;
+                }
+                else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
+                {
+                    SetStaticInfo("Eraser Mode (Point)");
+                    EraserButton.ToolTip = "Toggle eraser - OFF";
+                    MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                    EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
+                }
+                else
+                {
+                    SetEraserMode(!_eraserMode);
+                    EraserButton.ToolTip = "Toggle eraser mode (E)";
+                    EraseByPoint_Flag = (int)erase_mode.NONE;
+                }
             }
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -653,6 +656,12 @@ namespace AntFu7.LiveDraw
         private void EnableButton_Click(object sender, RoutedEventArgs e)
         {
             SetEnable(!_enable);
+            if(_eraserMode)
+            {
+                SetEraserMode(!_eraserMode);
+                EraserButton.ToolTip = "Toggle eraser mode (E)";
+                EraseByPoint_Flag = (int)erase_mode.NONE;
+            }
         }
         private void OrientationButton_Click(object sender, RoutedEventArgs e)
         {

@@ -509,6 +509,7 @@ namespace AntFu7.LiveDraw
             {
                 SetEraserMode(false);
                 EraseByPoint_Flag = (int)erase_mode.NONE;
+                EraserButton.ToolTip = "Toggle eraser mode (E)";
             }
         }
 

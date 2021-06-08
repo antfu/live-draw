@@ -481,6 +481,12 @@ namespace AntFu7.LiveDraw
             var border = sender as ColorPicker;
             if (border == null) return;
             SetColor(border);
+
+            if(EraseByPoint_Flag != (int)erase_mode.NONE)
+            {
+                SetEraserMode(false);
+                EraseByPoint_Flag = (int)erase_mode.NONE;
+            }
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -531,6 +537,7 @@ namespace AntFu7.LiveDraw
             }
             else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
             {
+                SetStaticInfo("Eraser Mode (Point)");
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                 EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
             }

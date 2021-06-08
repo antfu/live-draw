@@ -27,6 +27,10 @@ The shortcuts that can be used:
 ### Downloads
 [Release](https://github.com/antfu/live-draw/releases)
 
+### Requirements
+- Windows OS
+- .Net Core 5 x86/x64 
+
 ### Features
 - True transparent background (you can draw freely even when you are watching videos).
 - Select colors by simply clicks.

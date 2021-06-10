@@ -796,7 +796,7 @@ namespace AntFu7.LiveDraw
             {
                 SetEnable(!_enable);
             }
-            if (_enable)
+            if (!_enable) return;
             {
                 switch (e.Key)
                 {

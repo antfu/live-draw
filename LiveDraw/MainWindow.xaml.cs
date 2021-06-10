@@ -796,58 +796,58 @@ namespace AntFu7.LiveDraw
             {
                 SetEnable(!_enable);
             }
-            if (!_enable) return;
+            if (!_enable) 
+                return;
+            
+            switch (e.Key)
             {
-                switch (e.Key)
-                {
-                    case Key.Z:
-                        Undo();
-                        break;
-                    case Key.Y:
-                        Redo();
-                        break;
-                    case Key.E:
-                        EraserFunction();
-                        break;
-                    case Key.B:
-                        if (_eraserMode == true)
-                            SetEraserMode(false);
-                        SetEnable(true);
-                        break;
-                    case Key.L:
-                        if (_eraserMode == true)
-                            SetEraserMode(false);
-                        LineMode(true);
-                        break;
+                case Key.Z:
+                    Undo();
+                    break;
+                case Key.Y:
+                    Redo();
+                    break;
+                case Key.E:
+                    EraserFunction();
+                    break;
+                case Key.B:
+                    if (_eraserMode == true)
+                        SetEraserMode(false);
+                    SetEnable(true);
+                    break;
+                case Key.L:
+                    if (_eraserMode == true)
+                        SetEraserMode(false);
+                    LineMode(true);
+                    break;
 
-                    /*
-                    case Key.D:
-                        if (EraseByPoint_Flag is ((int)erase_mode.NONE) or ((int)erase_mode.ERASER))
-                        {
-                            SetStaticInfo("Eraser Mode (Point)");
-                            MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                            EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
-                        }
-                        else if (EraseByPoint_Flag == (int)erase_mode.ERASERBYPOINT)
-                        {
-                            MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
-                            EraseByPoint_Flag = (int)erase_mode.NONE;
-                        }
-                        break;
-                    */
-                    case Key.Add:
-                        _brushIndex++;
-                        if (_brushIndex > _brushSizes.Count() - 1)
-                            _brushIndex = 0;
-                        SetBrushSize(_brushSizes[_brushIndex]);
-                        break;
-                    case Key.Subtract:
-                        _brushIndex--;
-                        if (_brushIndex < 0)
-                            _brushIndex = _brushSizes.Count() - 1;
-                        SetBrushSize(_brushSizes[_brushIndex]);
-                        break;
-                }
+                /*
+                case Key.D:
+                    if (EraseByPoint_Flag is ((int)erase_mode.NONE) or ((int)erase_mode.ERASER))
+                    {
+                        SetStaticInfo("Eraser Mode (Point)");
+                        MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                        EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
+                    }
+                    else if (EraseByPoint_Flag == (int)erase_mode.ERASERBYPOINT)
+                    {
+                        MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                        EraseByPoint_Flag = (int)erase_mode.NONE;
+                    }
+                    break;
+                */
+                case Key.Add:
+                    _brushIndex++;
+                    if (_brushIndex > _brushSizes.Count() - 1)
+                        _brushIndex = 0;
+                    SetBrushSize(_brushSizes[_brushIndex]);
+                    break;
+                case Key.Subtract:
+                    _brushIndex--;
+                    if (_brushIndex < 0)
+                        _brushIndex = _brushSizes.Count() - 1;
+                    SetBrushSize(_brushSizes[_brushIndex]);
+                    break;
             }            
         }
         #endregion

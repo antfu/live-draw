@@ -216,11 +216,19 @@ namespace AntFu7.LiveDraw
         }
         private void SetBrushSize(double s)
         {
-            MainInkCanvas.DefaultDrawingAttributes.Height = s;
-            MainInkCanvas.DefaultDrawingAttributes.Width = s;
-            brushPreview?.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
-            brushPreview?.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
-            MainInkCanvas.EraserShape = new EllipseStylusShape(s,s);
+            if (EraseByPoint_Flag == (int)erase_mode.ERASERBYPOINT)
+            {
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.GestureOnly;
+                MainInkCanvas.EraserShape = new EllipseStylusShape(s, s);
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+            }
+            else
+            {
+                MainInkCanvas.DefaultDrawingAttributes.Height = s;
+                MainInkCanvas.DefaultDrawingAttributes.Width = s;
+                brushPreview?.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
+                brushPreview?.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
+            }
         }
         private void SetEraserMode(bool v)
         {
@@ -386,6 +394,8 @@ namespace AntFu7.LiveDraw
             {
                 SetStaticInfo("Eraser Mode (Point)");
                 EraserButton.ToolTip = "Toggle eraser - OFF";
+                double s = MainInkCanvas.EraserShape.Height;
+                MainInkCanvas.EraserShape = new EllipseStylusShape(s, s);           
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                 EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
             }

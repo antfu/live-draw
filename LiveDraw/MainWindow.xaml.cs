@@ -216,18 +216,18 @@ namespace AntFu7.LiveDraw
         }
         private void SetBrushSize(double s)
         {
-            if (MainInkCanvas.EditingMode == InkCanvasEditingMode.Ink)
+            if (MainInkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint)
+            {
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.GestureOnly;
+                MainInkCanvas.EraserShape = new EllipseStylusShape(s, s);
+                MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+            }
+            else
             {
                 MainInkCanvas.DefaultDrawingAttributes.Height = s;
                 MainInkCanvas.DefaultDrawingAttributes.Width = s;
                 brushPreview?.BeginAnimation(HeightProperty, new DoubleAnimation(s, Duration4));
                 brushPreview?.BeginAnimation(WidthProperty, new DoubleAnimation(s, Duration4));
-            }
-            else if(MainInkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint)
-            {
-                MainInkCanvas.EditingMode = InkCanvasEditingMode.GestureOnly;
-                MainInkCanvas.EraserShape = new EllipseStylusShape(s, s);
-                MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
             }
         }
         private void SetEraserMode(bool v)

@@ -26,6 +26,7 @@ namespace AntFu7.LiveDraw
     public partial class MainWindow : Window
     {
         public static int EraseByPoint_Flag = 0;
+
         public enum erase_mode
         {
             NONE = 0,
@@ -190,6 +191,7 @@ namespace AntFu7.LiveDraw
             if (_enable == true)
             {
                 LineButton.IsActived = false;
+                EraserButton.IsActived = false;
                 SetStaticInfo("LiveDraw");
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
             }
@@ -384,6 +386,7 @@ namespace AntFu7.LiveDraw
 
         void EraserFunction()
         {
+            LineMode(false);
             if (EraseByPoint_Flag == (int)erase_mode.NONE)
             {
                 SetEraserMode(!_eraserMode);
@@ -392,6 +395,7 @@ namespace AntFu7.LiveDraw
             }
             else if (EraseByPoint_Flag == (int)erase_mode.ERASER)
             {
+                EraserButton.IsActived = true;
                 SetStaticInfo("Eraser Mode (Point)");
                 EraserButton.ToolTip = "Toggle eraser - OFF";
                 double s = MainInkCanvas.EraserShape.Height;
@@ -551,7 +555,7 @@ namespace AntFu7.LiveDraw
             SetBrushSize(_brushSizes[_brushIndex]);
         }
         private void LineButton_Click(object sender, RoutedEventArgs e)
-        {
+        {           
             LineMode(!_lineMode);
         }
         private void UndoButton_Click(object sender, RoutedEventArgs e)
@@ -870,16 +874,26 @@ namespace AntFu7.LiveDraw
       
         private void LineMode(bool l)
         {
-            LineButton.IsActived = l;
-            _lineMode = l;
-            if (_lineMode)
+            if(_enable)
             {
-                SetStaticInfo("LineMode");
-                MainInkCanvas.EditingMode = InkCanvasEditingMode.None;
-                MainInkCanvas.UseCustomCursor = true;
+                
+                _lineMode = l;
+                if (_lineMode)
+                {
+                    EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
+                    EraserFunction();
+                    SetEraserMode(false);
+                    EraserButton.IsActived = false;
+                    LineButton.IsActived = l;
+                    SetStaticInfo("LineMode");
+                    MainInkCanvas.EditingMode = InkCanvasEditingMode.None;
+                    MainInkCanvas.UseCustomCursor = true;
+                }
+                else
+                {
+                    SetEnable(true);
+                }
             }
-            else
-                SetEnable(true);
         }
         private void StartLine(object sender, MouseButtonEventArgs e)
         {

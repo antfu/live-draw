@@ -145,7 +145,7 @@ namespace AntFu7.LiveDraw
         private bool _displayDetailPanel;
         private bool _eraserMode;
         private bool _enable;
-        private readonly int[] _brushSizes = { 2, 5, 8, 13, 20 };
+        private readonly int[] _brushSizes = { 3, 5, 8, 13, 20 };
         private int _brushIndex = 1;
         private bool _displayOrientation;
 
@@ -872,7 +872,6 @@ namespace AntFu7.LiveDraw
         {
             LineButton.IsActived = l;
             _lineMode = l;
-            //EraseByPoint_Flag = (int)erase_mode.NONE;
             if (_lineMode)
             {
                 SetStaticInfo("LineMode");

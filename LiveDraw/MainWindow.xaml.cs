@@ -4,14 +4,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -21,7 +19,7 @@ using Point = System.Windows.Point;
 
 namespace AntFu7.LiveDraw
 {
-    
+
 
     public partial class MainWindow : Window
     {
@@ -31,7 +29,7 @@ namespace AntFu7.LiveDraw
         {
             NONE = 0,
             ERASER = 1,
-            ERASERBYPOINT = 2            
+            ERASERBYPOINT = 2
         }
         private static Mutex mutex = new Mutex(true, "LiveDraw");
         private static readonly Duration Duration1 = (Duration)Application.Current.Resources["Duration1"];
@@ -70,7 +68,7 @@ namespace AntFu7.LiveDraw
 
         public MainWindow()
         {
-           
+
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
                 _history = new Stack<StrokesHistoryNode>();
@@ -104,7 +102,7 @@ namespace AntFu7.LiveDraw
         {
             if (IsUnsaved())
                 QuickSave("ExitingAutoSave_");
-            
+
             Application.Current.Shutdown(0);
         }
 
@@ -250,8 +248,8 @@ namespace AntFu7.LiveDraw
         }
         private void SetOrientation(bool v)
         {
-            PaletteRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(v ? -90:0, Duration4));
-            Palette.BeginAnimation(MinWidthProperty, new DoubleAnimation(v? 90:0, Duration7));
+            PaletteRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(v ? -90 : 0, Duration4));
+            Palette.BeginAnimation(MinWidthProperty, new DoubleAnimation(v ? 90 : 0, Duration7));
             //PaletteGrip.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeGrip" : "HorizontalModeGrip"], Duration3));
             //BasicButtonPanel.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeFlowPanel" : "HorizontalModeFlowPanel"], Duration3));
             //PaletteFlowPanel.BeginAnimation(WidthProperty, new DoubleAnimation((double)Application.Current.Resources[v ? "VerticalModeFlowPanel" : "HorizontalModeFlowPanel"], Duration3));
@@ -399,7 +397,7 @@ namespace AntFu7.LiveDraw
                 SetStaticInfo("Eraser Mode (Point)");
                 EraserButton.ToolTip = "Toggle eraser - OFF";
                 double s = MainInkCanvas.EraserShape.Height;
-                MainInkCanvas.EraserShape = new EllipseStylusShape(s, s);           
+                MainInkCanvas.EraserShape = new EllipseStylusShape(s, s);
                 MainInkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                 EraseByPoint_Flag = (int)erase_mode.ERASERBYPOINT;
             }
@@ -519,7 +517,7 @@ namespace AntFu7.LiveDraw
             if (border == null) return;
             SetColor(border);
 
-            if(EraseByPoint_Flag != (int)erase_mode.NONE)
+            if (EraseByPoint_Flag != (int)erase_mode.NONE)
             {
                 SetEraserMode(false);
                 EraseByPoint_Flag = (int)erase_mode.NONE;
@@ -555,7 +553,7 @@ namespace AntFu7.LiveDraw
             SetBrushSize(_brushSizes[_brushIndex]);
         }
         private void LineButton_Click(object sender, RoutedEventArgs e)
-        {           
+        {
             LineMode(!_lineMode);
         }
         private void UndoButton_Click(object sender, RoutedEventArgs e)
@@ -568,9 +566,9 @@ namespace AntFu7.LiveDraw
         }
         private void EraserButton_Click(object sender, RoutedEventArgs e)
         {
-            if(_enable)
+            if (_enable)
             {
-                EraserFunction();                
+                EraserFunction();
             }
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -676,7 +674,7 @@ namespace AntFu7.LiveDraw
         private void EnableButton_Click(object sender, RoutedEventArgs e)
         {
             SetEnable(!_enable);
-            if(_eraserMode)
+            if (_eraserMode)
             {
                 SetEraserMode(!_eraserMode);
                 EraserButton.ToolTip = "Toggle eraser mode (E)";
@@ -794,7 +792,7 @@ namespace AntFu7.LiveDraw
             _lastMousePosition = currentMousePosition;
         }
         private void Palette_MouseUp(object sender, MouseButtonEventArgs e)
-        { 
+        {
             EndDrag();
         }
         private void Palette_MouseLeave(object sender, MouseEventArgs e)
@@ -806,13 +804,13 @@ namespace AntFu7.LiveDraw
         #region /--------- Shortcuts --------/
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.R)
+            if (e.Key == Key.R)
             {
                 SetEnable(!_enable);
             }
-            if (!_enable) 
+            if (!_enable)
                 return;
-            
+
             switch (e.Key)
             {
                 case Key.Z:
@@ -862,7 +860,7 @@ namespace AntFu7.LiveDraw
                         _brushIndex = _brushSizes.Count() - 1;
                     SetBrushSize(_brushSizes[_brushIndex]);
                     break;
-            }            
+            }
         }
         #endregion
 
@@ -871,12 +869,12 @@ namespace AntFu7.LiveDraw
         private bool _lineMode = false;
         private Point _startPoint;
         private Stroke _lastStroke;
-      
+
         private void LineMode(bool l)
         {
-            if(_enable)
+            if (_enable)
             {
-                
+
                 _lineMode = l;
                 if (_lineMode)
                 {

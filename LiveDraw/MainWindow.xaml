@@ -108,32 +108,31 @@
                 <Grid x:Name="PaletteFlowPanel" Margin="50" Width="{StaticResource HorizontalModeFlowPanel}" >
                     <WrapPanel x:Name="PaletteFlowInsiderPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Grid x:Name="BasicButtonPanel" Width="{StaticResource HorizontalModeColorPickersPanel}" Margin="0">
-                            <WrapPanel VerticalAlignment="Top" Margin="0,0,10,0" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <WrapPanel VerticalAlignment="Top" Margin="0,0,10,0" Orientation="Vertical" HorizontalAlignment="Center">
+                                <WrapPanel VerticalAlignment="Top" Margin="0,0,10,0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button x:Name="MinimizeButton" Style="{StaticResource SpinningButton}" Background="#338A8A8A" Click="MinimizeButton_Click"  VerticalAlignment="Center" ToolTip="Minimize" >
+                                        <Button.RenderTransform>
+                                            <RotateTransform CenterX="12.5" CenterY="12.5" Angle="{Binding MinWidth, ElementName=Palette}"/>
+                                        </Button.RenderTransform>
+                                        <Path Width="12" Data="{DynamicResource IconMinimize}" Margin="0,0,0,0"/>
+                                    </Button>
+                                    <Button x:Name="DetailToggler" Style="{StaticResource ResponseButton}" Background="#338A8A8A" VerticalAlignment="Center" Click="DetailToggler_Click" ToolTip="Toggle more option" >
+                                        <Path Data="{DynamicResource IconArrow}" Margin="0,0,1,1" Width="10">
+                                            <Path.RenderTransform>
+                                                <RotateTransform x:Name="DetailTogglerRotate"/>
+                                            </Path.RenderTransform>
+                                        </Path>
+                                    </Button>
+                                    <Button x:Name="CloseButton" Style="{StaticResource SpinningButton}" Background="#338A8A8A" Click="CloseButton_Click"  VerticalAlignment="Center" ToolTip="Exit" >
+                                        <Path Data="{DynamicResource IconCross}" Margin="0,0,1,1" Width="10">
+                                        </Path>
+                                    </Button>
+                                </WrapPanel>
                                 <Border x:Name="PaletteGrip" Width="150" Cursor="SizeAll" Height="25" MouseDown="PaletteGrip_MouseDown"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0" Padding="3" >
                                     <Border CornerRadius="5" Background="#338A8A8A">
                                         <TextBlock x:Name="InfoBox" Foreground="White" FontSize="10" FontFamily="Consolas" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                 </Border>
-                                <Button x:Name="DetailToggler" Style="{StaticResource ResponseButton}" Background="#FF86C91F" VerticalAlignment="Center" Click="DetailToggler_Click" ToolTip="Toggle more option" >
-                                    <Path Data="{DynamicResource IconArrow}" Margin="0,1,0,0" Width="10">
-                                        <Path.RenderTransform>
-                                            <RotateTransform x:Name="DetailTogglerRotate"/>
-                                        </Path.RenderTransform>
-                                    </Path>
-                                </Button>
-                                <Button x:Name="MinimizeButton" Style="{StaticResource SpinningButton}" Background="#FF0F9DE4" Click="MinimizeButton_Click"  VerticalAlignment="Center" ToolTip="Minimize" >
-                                    <Button.RenderTransform>
-                                        <RotateTransform CenterX="12.5" CenterY="12.5" Angle="{Binding MinWidth, ElementName=Palette}"/>
-                                    </Button.RenderTransform>
-                                    <Path Width="12" Data="{DynamicResource IconMinimize}" Margin="1,1,0,0"/>
-                                </Button>
-                                <Button x:Name="CloseButton" Style="{StaticResource SpinningButton}" Background="#FFFF7774" Click="CloseButton_Click"  VerticalAlignment="Center" ToolTip="Exit" >
-                                    <Path Data="{DynamicResource IconCross}" Margin="1,1,0,0" Width="10">
-                                        <Path.RenderTransform >
-                                            <RotateTransform Angle="{Binding ElementName=CloseButton,Path=MaxWidth}"/>
-                                        </Path.RenderTransform>
-                                    </Path>
-                                </Button>
                             </WrapPanel>
                         </Grid>
                         <Grid x:Name="ColorPickersPanel" Width="{StaticResource HorizontalModeColorPickersPanel}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{StaticResource ElementMarginMiddle}">
@@ -233,7 +232,7 @@
                                 <local:ActivableButton x:Name="LineButton" ToolTip="Line Mode" Click="LineButton_Click">
                                     <Path Data="{DynamicResource IconMinimize}" RenderTransformOrigin="0.5,0.5" Height="3" Stretch="Fill" Width="15">
                                         <Path.RenderTransform>
-                                            <RotateTransform Angle="-45"/>                                       
+                                            <RotateTransform Angle="-45"/>
                                         </Path.RenderTransform>
                                     </Path>
                                 </local:ActivableButton>

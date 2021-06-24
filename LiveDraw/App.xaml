@@ -225,7 +225,7 @@
                     </Trigger>
                 </ControlTemplate.Triggers>
             </ControlTemplate>
-            <Style  x:Key="ResponseButton" TargetType="Button">
+            <Style x:Key="ResponseButton" TargetType="Button">
                 <Setter Property="Width" Value="25"/>
                 <Setter Property="Height" Value ="25"/>
                 <Setter Property ="Template" Value="{StaticResource ResponseButtonTemplate}"/>

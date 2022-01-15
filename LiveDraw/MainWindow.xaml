@@ -116,7 +116,7 @@
                                         </Button.RenderTransform>
                                         <Path Width="12" Data="{DynamicResource IconMinimize}" Margin="0,0,0,0"/>
                                     </Button>
-                                    <Button x:Name="DetailToggler" Style="{StaticResource ResponseButton}" Background="#338A8A8A" VerticalAlignment="Center" Click="DetailToggler_Click" ToolTip="Toggle more option" >
+                                    <Button x:Name="DetailToggler" Style="{StaticResource ResponseButton}" Background="#338A8A8A" VerticalAlignment="Center" Click="DetailToggler_Click" ToolTip="Toggle more options" >
                                         <Path Data="{DynamicResource IconArrow}" Margin="0,0,1,1" Width="10">
                                             <Path.RenderTransform>
                                                 <RotateTransform x:Name="DetailTogglerRotate"/>

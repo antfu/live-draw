@@ -4,7 +4,7 @@ using System.Windows.Media.Animation;
 
 namespace AntFu7.LiveDraw
 {
-    class CornerRadiusAnimation : AnimationTimeline
+    public class CornerRadiusAnimation : AnimationTimeline
     {
         static CornerRadiusAnimation()
         {

@@ -1,34 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Media.Animation;
 
 namespace AntFu7.LiveDraw
 {
-    class ActivableButton : Button
-    {
-        public static readonly DependencyProperty IsActivedProperty = DependencyProperty.Register(
-            "IsActived", typeof(bool), typeof(ActivableButton), new PropertyMetadata(default(bool)));
-
-        public bool IsActived
-        {
-            get { return (bool)GetValue(IsActivedProperty); }
-            set { SetValue(IsActivedProperty, value); }
-        }
-    }
-
-    enum ColorPickerButtonSize
-    {
-        Small,
-        Middle,
-        Large
-    }
-
-    internal class ColorPicker : ActivableButton
+    public class ColorPicker : ActivableButton
     {
         public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(
             "Size", typeof(ColorPickerButtonSize), typeof(ColorPicker),

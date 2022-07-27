@@ -904,10 +904,32 @@ namespace AntFu7.LiveDraw
         {
             if (_isMoving == true)
             {
+                StrokeCollection collection = new ();
                 Point endPoint = e.GetPosition(MainInkCanvas);
+                LineDrawing(15);
+                LineDrawing(-15);
+                void LineDrawing(double rotation)
+                {
+                    DrawingAttributes newLine = MainInkCanvas.DefaultDrawingAttributes.Clone();
+                    newLine.StylusTip = StylusTip.Ellipse;
+                    newLine.IgnorePressure = true;
+                    VectorX ps = new (_startPoint.X, _startPoint.Y);
+                    VectorX pe = new (endPoint.X, endPoint.Y);
+                    Point md = ((ps - pe) * 0.85f + ps).ToPoint();
+                    List<Point> points = new()
+                    {
+                        endPoint,
+                        md,
+                    };
+                    Matrix rotatingMatrix = new();
+                    rotatingMatrix.RotateAt(rotation, endPoint.X, endPoint.Y);
+                    var stroke = new Stroke(new (points)) { DrawingAttributes = newLine};
+                    stroke.Transform(rotatingMatrix, false);
+                    MainInkCanvas.Strokes.Add(stroke);
+                    collection.Add(stroke);
+                }
                 if (_lastStroke != null)
                 {
-                    StrokeCollection collection = new StrokeCollection();
                     collection.Add(_lastStroke);
                     Push(_history, new StrokesHistoryNode(collection, StrokesHistoryNodeType.Added));
                 }

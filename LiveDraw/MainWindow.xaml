@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:AntFu7.LiveDraw"
     x:Class="AntFu7.LiveDraw.MainWindow"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    mc:Ignorable="d" ResizeMode="NoResize" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{StaticResource FakeTransparent}" AllowsTransparency="True" WindowStyle="None" Title="LiveDraw Dev" Icon="Rescoures/icon.ico" KeyDown="Window_KeyDown" >
+    mc:Ignorable="d" ResizeMode="NoResize" UseLayoutRounding="True" WindowStartupLocation="Manual" Background="{StaticResource FakeTransparent}" AllowsTransparency="True" WindowStyle="None" Title="LiveDraw Dev" Icon="Rescoures/icon.ico" KeyDown="Window_KeyDown" Loaded="MainWindow_Loaded" >
     <Window.Resources>
         <SolidColorBrush x:Key="PaintingColor1" Color="#FF86E238"/>
         <SolidColorBrush x:Key="PaintingColor2" Color="#FF38E2A8"/>
